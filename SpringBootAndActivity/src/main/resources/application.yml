@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: admin
+    url: jdbc:mysql://localhost:3306/mydb?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    name: mydb
+  activiti:
+    process-definition-location-prefix: classpath:processes/
+    process-definition-location-suffix: .bpmn20.xml
+
+
+server:
+  port: 8082
+
+#  sql:
+#    init:
+#      schema-locations:
+#        - classpath:sql/department.sql
+#        - classpath:sql/employee.sql
+#mybatis-plus:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.example.mybatisplus.entity
