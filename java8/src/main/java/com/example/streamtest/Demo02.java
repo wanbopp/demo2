@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * @注释
  */
 public class Demo02 {
+
     public static void main(String[] args) {
         List<Dish> dishes = Arrays.asList(
                 new Dish("pork", false, 800, Dish.Type.MEAT),
@@ -80,5 +81,6 @@ public class Demo02 {
         List<Boolean> collect6 = dishes.stream().filter(Dish::isVegetarian).map(Dish::isVegetarian).collect(Collectors.toList());
         collect6.forEach(System.out::println);
 
+        System.out.println("collect6 = " + collect6);
     }
 }
