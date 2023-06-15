@@ -27,5 +27,29 @@ public class Person {
         //可接受null的Optional
         Optional<Object> o = Optional.ofNullable(null);
         hello.get();//如果Optional中有值则返回该值，否则抛出NoSuchElementException异常
+
+
+        //flatMap
+        Person person = new Person();
+//        Optional.of(person)
+//                .map(Person::getCar)//返回Optional<Optional<Car>>
+//                .map(Car::getInsurance)
+//                .map(Insurance::getName);
+        //错误因为map中Person::getCar返回的是 Optional<Car> 而不是Car 后续无法调用
+
+        //采用类似于流的中flatMap 将流中元素扁平化的思想
+        //Optional.flatMap()方法将 Optional<Optional<Car>> 转换为一层Optional<Car>
+
+        //使用Optional获取car的保险公司的名称
+        Optional.of(person)
+                .flatMap(Person::getCar)
+                .flatMap(Car::getInsurance)
+                .map(Insurance::getName)
+                .orElse("Unknown");//如果Optional的结果值为空，设置默认值
+
+        //注意Optional 未实现序列化
     }
+
+
+
 }
