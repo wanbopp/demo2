@@ -1,5 +1,6 @@
 package com.example.streamtest.optional;
 
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -16,6 +17,8 @@ public class Integrate {
         props.setProperty("b", "true");
         props.setProperty("c", "-3");
 
+        int a = functionalReadDuration(props, "c");
+        System.out.println("a = " + a);
     }
 
     //以命令式编程方式读取属性
@@ -32,5 +35,22 @@ public class Integrate {
             }
         }
         return 0;
+    }
+
+    //使用Optional重写
+    public static int functionalReadDuration(Properties props, String name) {
+        return Optional.ofNullable(props.getProperty(name))
+                .flatMap(Integrate::stringToInt)
+                .filter(i -> i > 0)
+                .orElse(0);
+    }
+
+    //使用工具封装转换为optional
+    public static Optional<Integer> stringToInt(String s) {
+        try {
+            return Optional.of(Integer.parseInt(s));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
     }
 }
