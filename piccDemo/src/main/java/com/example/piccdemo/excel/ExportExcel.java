@@ -70,7 +70,6 @@ public class ExportExcel {
             private List<Students> list = new ArrayList<Students>();
 
 
-
             /**
              * 每读取一次就会调用invoke方法
              */
@@ -105,13 +104,8 @@ public class ExportExcel {
         }).sheet().doRead();
 
 
-
-
-
         return students;
     }
-
-
 
 
     public static void main(String[] args) {
