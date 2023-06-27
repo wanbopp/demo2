@@ -1,5 +1,7 @@
 package com.example.streamtest.CompletableFuture.FutureInterface;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -12,8 +14,28 @@ import java.util.concurrent.Future;
  */
 
 public class Shop {
-    public Shop(String name) {
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public Shop(String name) {
+        this.name = name;
+    }
+
+    private String name;
+    private String price;
 
     //同步的价格查询方法
     public double getPrice(String product) {
@@ -43,13 +65,29 @@ public class Shop {
         try {
             new Thread(() -> {
                 double price = calculatePrice(product);
-                future.complete(price);//需要长时间计算的任务结束并得出结果时，设置Future的返回值
+                throw new RuntimeException("product not available");
+//                future.complete(price);//需要长时间计算的任务结束并得出结果时，设置Future的返回值
             }).start();
         } catch (Exception e) {
             future.completeExceptionally(e);//失败时抛出异常，
         }
         return future;//无需等待还没结束的计算，直接返回Future对象
     }
+
+
+    //使用工厂方法supplyAsync创建CompletableFuture对象
+    public Future<Double> getPriceAsync1(String product) {
+        return CompletableFuture.supplyAsync(() -> calculatePrice(product));
+    }
+
+
+    //接受产品名，返回商电名称和价格
+    public String getPriceStr(String product) {
+        double price = calculatePrice(product);
+        return String.format("%s:%.2f", name, price);
+    }
+
+
 
 
     public static void main(String[] args) {
@@ -72,6 +110,13 @@ public class Shop {
 
         long l1 = (System.nanoTime() - start) / 1_000_000;
         System.out.println("Price returned after " + l1 + " msecs");//计算完成的时间
+
+
+        List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Integer reduce = integers.stream().reduce(0, Integer::sum);
+
+        integers.stream().mapToInt(Integer::intValue)
+                .sum();
 
     }
 
