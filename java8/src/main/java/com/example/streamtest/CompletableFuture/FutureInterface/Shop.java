@@ -1,5 +1,7 @@
 package com.example.streamtest.CompletableFuture.FutureInterface;
 
+import com.example.streamtest.CompletableFuture.Discount;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -40,6 +42,12 @@ public class Shop {
     //同步的价格查询方法
     public double getPrice(String product) {
         return calculatePrice(product);
+    }
+
+    public static String getPriceWithDiscount(String product){
+        double price = calculatePrice(product);
+        Discount.Code code = Discount.Code.values()[(int) (Math.random() * Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", product, price, code);
     }
 
     private static double calculatePrice(String product) {
