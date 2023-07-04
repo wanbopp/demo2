@@ -4,6 +4,7 @@ import com.example.streamtest.CompletableFuture.Discount;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -16,6 +17,7 @@ import java.util.concurrent.Future;
  */
 
 public class Shop {
+    Random random = new Random();
     public String getName() {
         return name;
     }
@@ -88,6 +90,16 @@ public class Shop {
         return CompletableFuture.supplyAsync(() -> calculatePrice(product));
     }
 
+    public String getPriceStr2(String product) {
+        double price = calculatePrice1(product);
+        Discount.Code code = Discount.Code.values()[
+                random.nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", name, price, code);
+    }
+    private double calculatePrice1(String product) {
+        delay();
+        return random.nextDouble() * product.charAt(0) + product.charAt(1);
+    }
 
     //接受产品名，返回商电名称和价格
     public String getPriceStr(String product) {
