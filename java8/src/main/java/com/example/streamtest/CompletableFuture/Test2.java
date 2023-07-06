@@ -9,13 +9,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
  * @version 1.0
  * @Author wanbo_pan
  * @Date 2023/6/28 19:47
- * @注释  多个异步任务进行流水线操作
+ * @注释 多个异步任务进行流水线操作
  */
 public class Test2 {
     //初始化商店
@@ -44,7 +45,7 @@ public class Test2 {
     }
 
     //使用Completable实现findPrices方法
-    public static List<String> findPricesAsync(String Product){
+    public static List<String> findPricesAsync(String Product) {
         List<CompletableFuture<String>> collect = shops.stream()
                 .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPriceStr2(Product), executor))
                 //以异步的方式取得每个shop中指定产品的原始价格、折扣编码
@@ -71,30 +72,57 @@ public class Test2 {
                 .collect(Collectors.toList());
     }
 
+
+    //使用thenCombine方法实现两个异步任务的流水线
+    public static void thenCombineTest(String product) {
+        CompletableFuture<Double> future = CompletableFuture.supplyAsync(() -> Shop.getPrice(product), executor)
+                .thenCombine(CompletableFuture.supplyAsync(
+                                () -> Exchange.getRate(Money.EUR, Money.USD)),//第二个参数类型为BiFunction
+                        (price, rate) -> price * rate);
+
+        System.out.println(future.join());
+    }
+
+    //最终优化
+    //1、每一个商店价格查询器增加了随机的延迟
+    //2、使用thenApply不会阻塞你的代码，等待上一步操作的结果，进行处理
+    //3、使用thenCombine等待前两个异步操作结束后 进行操作
+    //4、thenCompose 将两个CompletableFuture对象串联起来，
+    //接收前一个CompletableFuture对象返回的结果作为参数，返回另外一个CompletableFuture
+    public static Stream<CompletableFuture<String>> findPriceStream(String product) {
+        return shops.stream()
+                .map((shop) -> CompletableFuture.supplyAsync(() -> shop.getPriceStrWithRandom(product), executor))//向各个商店查询价格 返回Stream<CompletableFuture<String>>
+                .map(future -> future.thenApply(Quote::parse))//无需等待上一步异步任务结束，直接解析为Quote对象,流水线执行就行，使用Future的thenApply方法进行下一步操作，返回Stream<CompletableFuture<Quote>>
+                .map(quoteCompletableFuture -> quoteCompletableFuture.thenCompose(quote ->
+                        CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)));//在当前线程中进行进行合并操作，不使用另外的线程
+    }
+
+
     public static void main(String[] args) {
         //以最简单的方式实现使用Discount服务的findPrices方法
+//        long start = System.nanoTime();
+//        System.out.println(findPrices("myPhone27S"));
+//        long duration = (System.nanoTime() - start) / 1_000_000;
+//        System.out.println("Done in " + duration + " msecs");
+
+
+//        thenCombineTest("myPhone27S");
+
+
+        //价格查询器的最终优化
+        //Stream流中必须有终端操作，才会触发流水线的执行
         long start = System.nanoTime();
-        System.out.println(findPrices("myPhone27S"));
-        long duration = (System.nanoTime() - start) / 1_000_000;
-        System.out.println("Done in " + duration + " msecs");
+        CompletableFuture[] futures = findPriceStream("myPhone27S")
+                .map(f -> f.thenAccept(//在流水线执行完成后 进行操作
+                        s -> System.out.println(s + " (done in " +
+                                ((System.nanoTime() - start) / 1_000_000) + " msecs)")))
+                .toArray(size -> new CompletableFuture[size]);
+        CompletableFuture.allOf(futures).join();//allOf工厂方法接收一个由CompletableFuture构成的数组，数组中的所有CompletableFuture对象执行完成之后，它返回一个CompletableFuture<Void>对象。这意味着，如果你需
+        //要等待最初Stream中的所有 CompletableFuture对象执行完毕，对 allOf方法返回的CompletableFuture执行join操作是个不错的主意。
 
 
-        //使用并行流非常容易提升性能（简单场景下可以用）
-        //但是因为Stream底层依赖的是线程数量固定的通用线程池，如果商店数量增加，扩展性不好
-        //相反，你也知道CompletableFuture,可以自定义调度任务执行的执行器能够充分利用CPU资源
-
-        //使用Completable构建异步操作
-        start = System.nanoTime();
-        System.out.println(findPricesAsync("myPhone27S"));
-        duration = (System.nanoTime() - start) / 1_000_000;
-        System.out.println("Done in " + duration + " msecs");
-
-
-        //使用并行流
-        start = System.nanoTime();
-        System.out.println(findPricesParallel("myPhone27S"));
-        duration = (System.nanoTime() - start) / 1_000_000;
-        System.out.println("Done in " + duration + " msecs");
-
+        System.out.println("All shops have now responded in "
+                + ((System.nanoTime() - start) / 1_000_000) + " msecs");
     }
+
 }

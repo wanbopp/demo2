@@ -17,7 +17,8 @@ import java.util.concurrent.Future;
  */
 
 public class Shop {
-    Random random = new Random();
+    static Random random = new Random();
+
     public String getName() {
         return name;
     }
@@ -41,22 +42,6 @@ public class Shop {
     private String name;
     private String price;
 
-    //同步的价格查询方法
-    public double getPrice(String product) {
-        return calculatePrice(product);
-    }
-
-    public static String getPriceWithDiscount(String product){
-        double price = calculatePrice(product);
-        Discount.Code code = Discount.Code.values()[(int) (Math.random() * Discount.Code.values().length)];
-        return String.format("%s:%.2f:%s", product, price, code);
-    }
-
-    private static double calculatePrice(String product) {
-        delay();
-        return Math.random() * product.charAt(0) + product.charAt(1);
-    }
-
 
     //模拟延迟
     public static void delay() {
@@ -65,6 +50,32 @@ public class Shop {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    //模拟生成随机延时
+    public static void randomDelay() {
+        int delay = 500 + random.nextInt(2000);
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static double calculatePrice(String product) {
+        delay();
+        return Math.random() * product.charAt(0) + product.charAt(1);
+    }
+
+    //同步的价格查询方法
+    public static double getPrice(String product) {
+        return calculatePrice(product);
+    }
+
+    public static String getPriceWithDiscount(String product) {
+        double price = calculatePrice(product);
+        Discount.Code code = Discount.Code.values()[(int) (Math.random() * Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", product, price, code);
     }
 
 
@@ -96,8 +107,25 @@ public class Shop {
                 random.nextInt(Discount.Code.values().length)];
         return String.format("%s:%.2f:%s", name, price, code);
     }
+
+    //对最佳价格查询器的优化
+    //1、加入随机延时
+    //2、查询多个商店
+    //3、使用折扣服务
+    public String getPriceStrWithRandom(String product) {
+        double v = calculatePrice2Random(product);
+        Discount.Code code = Discount.Code.values()[random.nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", name, v, code);
+    }
+
+
     private double calculatePrice1(String product) {
         delay();
+        return random.nextDouble() * product.charAt(0) + product.charAt(1);
+    }
+
+    private double calculatePrice2Random(String product) {
+        randomDelay();
         return random.nextDouble() * product.charAt(0) + product.charAt(1);
     }
 
@@ -106,8 +134,6 @@ public class Shop {
         double price = calculatePrice(product);
         return String.format("%s:%.2f", name, price);
     }
-
-
 
 
     public static void main(String[] args) {

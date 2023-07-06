@@ -1,9 +1,6 @@
 package com.example.streamtest.CompletableFuture;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @version 1.0
@@ -12,6 +9,7 @@ import java.util.Map;
  * @注释 折扣服务
  */
 public class Discount {
+    static Random random = new Random();
 
     //以枚举类型定义折扣代码
     public enum Code {
@@ -32,7 +30,7 @@ public class Discount {
 
     //模拟Discount服务延时响应
     private static double apply(double price, Code code) {
-        delay();
+        randomDelay();
         return price * (100 - code.percentage) / 100;
     }
 
@@ -40,6 +38,16 @@ public class Discount {
     public static void delay() {
         try {
             Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //模拟生成随机延时
+    public static void randomDelay() {
+        int delay = 500 + random.nextInt(2000);
+        try {
+            Thread.sleep(delay);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
