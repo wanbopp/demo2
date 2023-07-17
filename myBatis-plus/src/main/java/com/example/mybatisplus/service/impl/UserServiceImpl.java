@@ -5,6 +5,7 @@ import com.example.mybatisplus.service.UserService;
 import com.example.mybatisplus.domain.User;
 import com.example.mybatisplus.dao.UserMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * @author wanbo_pp
@@ -15,6 +16,11 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService {
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void TransactionTest() {
+        throw new RuntimeException("手动抛出异常");
+    }
 }
 
 

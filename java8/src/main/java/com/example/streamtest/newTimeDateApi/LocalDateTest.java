@@ -1,12 +1,8 @@
-package com.example.streamtest.LocalDateAndTime;
+package com.example.streamtest.newTimeDateApi;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalField;
 
 /**
  * @version 1.0
@@ -68,6 +64,26 @@ public class LocalDateTest {
         LocalDate parse2 = LocalDate.parse("2023/07/12", DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         System.out.println("parse2 = " + parse2);
         //如果参数解析失败，会抛出RuntimeException的DateTimeParseException
+
+
+        //时间日期合并LocalDateTime
+        LocalDateTime now2 = LocalDateTime.now();
+        System.out.println("now2 = " + now2);
+        LocalDateTime of = LocalDateTime.of(localDate, localTime);
+        System.out.println("of = " + of);
+        LocalDateTime parse3 = LocalDateTime.parse("2023-07-11T08:26:30");//通时也支持格式化器
+        System.out.println("parse3 = " + parse3);
+
+        //LocalDateTime解析出LocalDate和LocalTime
+        LocalDate localDate1 = now2.toLocalDate();
+        System.out.println("localDate1 = " + localDate1);
+        LocalTime localTime1 = now2.toLocalTime();
+        System.out.println("localTime1 = " + localTime1);
+
+
+        LocalDateTime parse4 = LocalDateTime.parse("20230710192945", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        System.out.println("parse4 = " + parse4);
+
 
     }
 }
