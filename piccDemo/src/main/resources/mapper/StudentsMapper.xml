@@ -11,8 +11,8 @@
             <result property="grade" column="grade" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        student_id,name,age,
-        grade
-    </sql>
+<!--    <sql id="Base_Column_List">-->
+<!--        student_id,name,age,-->
+<!--        grade-->
+<!--    </sql>-->
 </mapper>

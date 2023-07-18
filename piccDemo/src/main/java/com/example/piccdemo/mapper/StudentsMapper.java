@@ -2,6 +2,7 @@ package com.example.piccdemo.mapper;
 
 import com.example.piccdemo.domain.Students;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
 
 /**
 * @author wanbo_pp
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-06-14 14:03:13
 * @Entity po.domain.Students
 */
+
 public interface StudentsMapper extends BaseMapper<Students> {
 
 }
