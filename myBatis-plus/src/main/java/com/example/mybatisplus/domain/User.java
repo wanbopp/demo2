@@ -1,6 +1,9 @@
 package com.example.mybatisplus.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.Setter;
 
@@ -30,6 +33,8 @@ public class User implements Serializable {
      * 邮箱
      */
     private String email;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 

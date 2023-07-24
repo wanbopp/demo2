@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.mybatisplus.dao.UserMapper;
 import com.example.mybatisplus.domain.User;
+import com.example.mybatisplus.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @SpringBootTest
@@ -18,6 +20,10 @@ public class SampleTest {
 
     @Autowired
     private UserMapper userMapper;
+
+
+    @Resource
+    private UserService userService;
 
     @Test
     public void testSelect() {
@@ -27,7 +33,7 @@ public class SampleTest {
     }
 
     @Test
-    public void testAllEq(){
+    public void testAllEq() {
         System.out.println(("----- AllEq method test ------"));
 
 //        HashMap<String, String> map = new HashMap<>();
@@ -73,6 +79,12 @@ public class SampleTest {
         Assert.notNull(user,"buweikon");
 
 
+        boolean update = userService.update(Wrappers.lambdaUpdate(User.class)
+                .set(User::getAge, 18)
+                .set(User::getCreateTime, new Date())
+                .set((1 == 1), User::getCreateTime, new Date()));
+
+        System.out.println("update = " + update);
     }
 
 }
