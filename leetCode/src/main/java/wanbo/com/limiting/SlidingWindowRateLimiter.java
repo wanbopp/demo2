@@ -2,6 +2,7 @@ package wanbo.com.limiting;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -83,6 +84,45 @@ public class SlidingWindowRateLimiter {
                 System.out.println("被限流");
             }
             TimeUnit.MILLISECONDS.sleep(15);
+        }
+
+
+    }
+
+    class Solution {
+        public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+            ListNode head = null;
+            ListNode tail = null;
+            int carry = 0;
+            while (l1 != null || l2 != null){
+
+            }
+
+
+
+
+
+
+            return head;
+
+        }
+    }
+
+
+    public class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
         }
     }
 

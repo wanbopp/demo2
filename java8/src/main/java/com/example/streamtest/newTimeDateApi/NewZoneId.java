@@ -1,7 +1,11 @@
 package com.example.streamtest.newTimeDateApi;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -48,5 +52,43 @@ public class NewZoneId {
         System.out.println("localDateTime = " + localDateTime);
 
 
+
+//        LocalTime time = LocalTime.of(8, 0, 0);
+//        String format = LocalDate.now().atTime(L).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        System.out.println("format = " + format);
+//        //format = 2023-07-24 08:00:00
+
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        LocalTime time = LocalTime.of(8, 0, 0);
+        LocalDateTime localDateTime1 = dateTime.toLocalDate().atTime(time);
+//        LocalDate.
+
+
+
     }
+
+    public void test() {
+        // 获取当前时间
+        Calendar calendar = Calendar.getInstance();
+        // 设置小时为8
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        // 设置分钟为0
+        calendar.set(Calendar.MINUTE, 0);
+        // 设置秒数为0
+        calendar.set(Calendar.SECOND, 0);
+        // 设置毫秒数为0
+        calendar.set(Calendar.MILLISECOND, 0);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // 获取新的时间
+        Date date = calendar.getTime();
+        String format1 = format.format(date);
+        // 输出新的时间
+        System.out.println(format1);
+        System.out.println(format1);
+        System.out.println(format1);
+    }
+
+
+
 }
