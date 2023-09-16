@@ -2,7 +2,6 @@ package com.example.streamtest;
 
 import com.example.streamtest.entity.Trader;
 import com.example.streamtest.entity.Transaction;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.util.Assert;
 
 import java.util.*;

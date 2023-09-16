@@ -1,6 +1,6 @@
 package com.example.streamtest.entity;//看包名就知道这个是hibernate附加的constraints
 
-import com.sun.istack.internal.NotNull;
+
 
 import java.util.Date;
 
