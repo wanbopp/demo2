@@ -22,18 +22,6 @@ public class CollectionsApi {
 //        List<String> list1 = Arrays.asList("2", "3", "4", "5");
 //        list.removeAll(list1);
 //        System.out.println("list = " + list);
-         // 一个简单的冒泡排序
-int[] arr = {6, 3, 8, 2, 9, 1};
-int temp = 0;
-for (int i = 0; i < arr.length - 1; i++) {
-    for (int j = 0; j < arr.length - 1 - i; j++) {
-        if (arr[j] > arr[j + 1]) {
-            temp = arr[j];
-            arr[j] = arr[j + 1];
-            arr[j + 1] = temp;
-        }
-
-}
-
+        // 一个简单的冒泡排序
     }
 }

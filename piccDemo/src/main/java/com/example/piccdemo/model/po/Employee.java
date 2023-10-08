@@ -1,6 +1,7 @@
 package com.example.piccdemo.model.po;//看包名就知道这个是hibernate附加的constraints
 
 import com.example.piccdemo.model.vo.EmployeeVo;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.BeanUtils;
 
@@ -16,6 +17,7 @@ import java.util.Date;
  * @Description: TODO
  * @date 2019/9/1718:53
  */
+@Data
 public class Employee {
 
     @NotNull(message = "姓名必填!")
