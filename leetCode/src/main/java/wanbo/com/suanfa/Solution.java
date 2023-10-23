@@ -316,10 +316,94 @@ public class Solution {
     //使用hash表记录次数
 
 
-        public static void main(String[] args) {
-        int[] ints = {1,3,1,1,4,1,1,5,1,1,6,2,2};
-        int i = new Solution().majorityElement(ints);
+//    public static void main(String[] args) {
+//        int[] ints = {1, 3, 1, 1, 4, 1, 1, 5, 1, 1, 6, 2, 2};
+//        int i = new Solution().majorityElement(ints);
+//    }
+
+
+    /**
+     * 189. 轮转数组
+     * 给定一个整数数组 nums，将数组中的元素向右轮转 k 个位置，其中 k 是非负数
+     * <p>
+     * 示例 1:
+     * <p>
+     * 输入: nums = [1,2,3,4,5,6,7], k = 3
+     * 输出: [5,6,7,1,2,3,4]
+     * 解释:
+     * 向右轮转 1 步: [7,1,2,3,4,5,6]
+     * 向右轮转 2 步: [6,7,1,2,3,4,5]
+     * 向右轮转 3 步: [5,6,7,1,2,3,4]
+     * 示例 2:
+     * <p>
+     * 输入：nums = [-1,-100,3,99], k = 2
+     * 输出：[3,99,-1,-100]
+     * 解释:
+     * 向右轮转 1 步: [99,-1,-100,3]
+     * 向右轮转 2 步: [3,99,-1,-100]
+     * <p>
+     * 提示
+     * 给定一个整数数组 nums 将数组中的元素向右轮转k个位置 其中k是非负数
+     * 尽可能想出更多的解决方案，至少有三种不同的方法可以解决这个问题。
+     * 你可以使用空间复杂度为O(1)的原地算法解决这个问题吗
+     */
+    //P1.暴力尝试
+    public void rotate(int[] nums, int k) {
+        //双指针尝试
+        //考虑K可能大于数组长度 也有可能等于零
+        if (k > nums.length) {
+            //取余数
+            k = k % nums.length;
+        } else if (k % nums.length == 0) {
+            return;
+        }
+        int num = nums.length - k;
+
+        while (num > 0) {
+            //平移一位
+            int n = 0;
+            while (n < k) {
+                int temp = nums[num + n - 1];
+                nums[num + n - 1] = nums[num + n];
+                nums[num + n] = temp;
+                n++;
+            }
+            num--;
+        }
+        System.out.println("nums = " + Arrays.toString(nums));
     }
 
+    //P2.环状替换
+    public void rotate1(int[] nums, int k) {
+        // nums = [1,2,3,4,5,6,7]
+
+    }
+
+    //P2.数组翻转
+    public void rotate2(int[] nums, int k) {
+        // nums = [1,2,3,4,5,6,7]
+        k = k % nums.length;
+        //1、先翻转所有元素
+        reverse(nums, 0, nums.length-1);
+        //2、分开两个区间、需要移动的元素  和   原始元素同时进行翻转
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+        System.out.println("nums = " + Arrays.toString(nums));
+    }
+    public void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3, 4, 5, 6, 7};
+        new Solution().rotate2(nums, 4);
+    }
 
 }
