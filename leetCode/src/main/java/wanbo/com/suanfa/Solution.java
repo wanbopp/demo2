@@ -1,5 +1,8 @@
 package wanbo.com.suanfa;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -444,8 +447,70 @@ public class Solution {
         return maxProfit;
 
     }
+    //P2 通解 动态规划
+    public int maxProfit1(int[] prices) {
+        //判断价格是否存在
+        if (prices == null || prices.length == 0) {
+            return 0;
+        }
+        //初始化状态
+        int length = prices.length;
+        int[][] dp = new int[length][2];//二维数组
+        //一维代表第几天 二维代表能交易几次  对应的值代表当天的收益 此时还要区分两个状态 当天是否持有股票
+        dp[0][0] = 0;//第一天不持有股票 此时收益为0
+        dp[0][1] = -prices[0]; //第一天持有股票价格 为第一天的价格
+        for (int i = 1; i < length; i++) {
+            //当天的两种情况
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
+            //最后一天不持有股票
+            //最后一天之前已经没有了交易次数 表示之前已经买入 分为在昨天买入（今天卖出）和昨天不持有
+            dp[i][1] = Math.max(dp[i - 1][1], -prices[i]);
+            //最后一天持有股票
+            //最后一天持有股票的的情况 表示只已经买入 分为昨天买入和今天买入
 
-//    public static void main(String[] args) {
+        }
+        return dp[length - 1][0];
+
+    }
+
+    /**
+     *
+     * 使用动态规划来解决这个问题，可以定义两个状态变量
+     * 一个用于表示在第 i 天持有股票的最大利润，另一个用于表示在第 i 天不持有股票的最大利润。
+     * 然后使用状态转移方程来更新这两个状态变量。
+     *
+     *
+     *
+     * 这段代码使用动态规划来计算最大利润
+     * 它在每一天考虑持有股票和不持有股票两种状态 并更新状态变量。
+     * 最后返回最后一天不持有股票时的最大利润，即最终的最大利润。
+     * 这个算法的时间复杂度为 O(n)，其中 n 是股票价格数组的长度。
+     * @param prices
+     * @return
+     */
+    public int maxProfit2(int[] prices) {
+        int n = prices.length;
+        if (n == 0) {
+            return 0; // 没有股票价格数据，无法获得利润
+        }
+
+        int[] dpHold = new int[n];  // 用于记录持有股票时的最大利润
+        int[] dpNotHold = new int[n];  // 用于记录不持有股票时的最大利润
+
+        dpHold[0] = -prices[0];  // 第一天持有股票的最大利润是负的买入价格
+        dpNotHold[0] = 0;  // 第一天不持有股票的最大利润为0
+
+        for (int i = 1; i < n; i++) {
+            dpHold[i] = Math.max(dpHold[i - 1], -prices[i]);  // 在第 i 天持有股票，可以选择不操作或者买入
+            //注意前一天不持有 今天买入 （只有这一次买入 注意关键点）
+            dpNotHold[i] = Math.max(dpNotHold[i - 1], dpHold[i - 1] + prices[i]);  // 在第 i 天不持有股票，可以选择不操作或者卖出
+        }
+
+        return dpNotHold[n - 1];  // 返回最后一天不持有股票的最大利润，即最终的最大利润
+    }
+
+
+    public static void main(String[] args) {
 //        int[] prices = {7, 1, 5, 3, 6, 4};
 //        int i = new Solution().maxProfit(prices);
 //        System.out.println("i = " + i);
@@ -480,6 +545,10 @@ public class Solution {
      */
 
 //    public int maxProfit2(int[] prices) {
-//
+//        //
 //    }
+
+
+
+
 }
