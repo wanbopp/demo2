@@ -447,6 +447,7 @@ public class Solution {
         return maxProfit;
 
     }
+
     //P2 通解 动态规划
     public int maxProfit1(int[] prices) {
         //判断价格是否存在
@@ -474,17 +475,17 @@ public class Solution {
     }
 
     /**
-     *
      * 使用动态规划来解决这个问题，可以定义两个状态变量
      * 一个用于表示在第 i 天持有股票的最大利润，另一个用于表示在第 i 天不持有股票的最大利润。
      * 然后使用状态转移方程来更新这两个状态变量。
-     *
-     *
-     *
+     * <p>
+     * <p>
+     * <p>
      * 这段代码使用动态规划来计算最大利润
      * 它在每一天考虑持有股票和不持有股票两种状态 并更新状态变量。
      * 最后返回最后一天不持有股票时的最大利润，即最终的最大利润。
      * 这个算法的时间复杂度为 O(n)，其中 n 是股票价格数组的长度。
+     *
      * @param prices
      * @return
      */
@@ -542,11 +543,32 @@ public class Solution {
      * 输入：prices = [7,6,4,3,1]
      * 输出：0
      * 解释：在这种情况下, 交易无法获得正利润，所以不参与交易可以获得最大利润，最大利润为 0
+     *
+     *
+     * 题解如果K为正无穷，则K和K-1可以看成是相同的，因此有
+     * T[i-1][k-1][0] = T[i-1][k][0]
+     * T[i-1][k-1][1] = T[i-1][k][1]
+     * 每天仍有两个未知变量：T[i][k][0]和T[i][k][1]其中K为正无穷
+     *
      */
+    public int maxProfit3(int[] prices) {
+        if (prices == null || prices.length == 0) {
+            return 0;//初始状态判断
+        }
+        int length = prices.length;
+        int[][] dp = new int[length][2];
+        dp[0][1] = -prices[0];
+        dp[0][0] = 0;
+        for (int i = 1; i < length; i++) {
+            //注意这里 K都一致 可以取消
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i][0] - prices[i]);//注意这个关键
+        }
+        return dp[length - 1][0];
+    }
 
-//    public int maxProfit2(int[] prices) {
-//        //
-//    }
+
+
 
 
 
