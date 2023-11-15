@@ -511,12 +511,16 @@ public class Solution {
     }
 
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        int[] prices = {7, 1, 5, 3, 6, 4};
 //        int i = new Solution().maxProfit(prices);
 //        System.out.println("i = " + i);
+
+
+//        List<String> list = Arrays.asList("1", "2", "3");
+//        list.add("4");
 //
-    }
+//    }
 
     /**
      * 121.买股票的最佳时机 II
@@ -543,13 +547,12 @@ public class Solution {
      * 输入：prices = [7,6,4,3,1]
      * 输出：0
      * 解释：在这种情况下, 交易无法获得正利润，所以不参与交易可以获得最大利润，最大利润为 0
-     *
-     *
+     * <p>
+     * <p>
      * 题解如果K为正无穷，则K和K-1可以看成是相同的，因此有
      * T[i-1][k-1][0] = T[i-1][k][0]
      * T[i-1][k-1][1] = T[i-1][k][1]
      * 每天仍有两个未知变量：T[i][k][0]和T[i][k][1]其中K为正无穷
-     *
      */
     public int maxProfit3(int[] prices) {
         if (prices == null || prices.length == 0) {
@@ -566,6 +569,124 @@ public class Solution {
         }
         return dp[length - 1][0];
     }
+
+
+    /**
+     * 给你一个非负整数数组，你最初位于数组的第一个下标，
+     * 数组中的每个元素代表你在该位置可以跳跃的最大长度。
+     * 判断你是否能到达最后一个下标，如果可以返回true；否则返回false
+     * 示例 1：
+     * <p>
+     * 输入：nums = [2,3,1,1,4]
+     * 输出：true
+     * 解释：可以先跳 1 步，从下标 0 到达下标 1, 然后再从下标 1 跳 3 步到达最后一个下标。
+     * 示例 2：
+     * <p>
+     * 输入：nums = [3,2,1,0,4]
+     * 输出：false
+     * 解释：无论怎样，总会到达下标为 3 的位置。但该下标的最大跳跃长度是 0 ， 所以永远不可能到达最后一个下标。
+     * <p>
+     * 提示：
+     * 1 <= nums.length <= 104
+     * 0 <= nums[i] <= 105
+     *
+     * @param nums
+     * @return
+     */
+
+//    public boolean canJump(int[] nums) {
+
+//        TODO 以下是错误的
+//        //为什么不能到 像实例二除了这个还有别的情况嘛
+//        //存在递减的 3、1、1、0  3、0、0、0
+//        //只要掉进这段就必定到达不了
+//        //0前面存在一个大数 到0的距离正好的是数值 且每个数都小于大数到0的降序排列
+//
+//        //记录最大数  不符合条件则重新计数  直到符合条件或者到达数组边界
+//        //条件是
+//
+//        //如果直接遍历最大数 判断到下一个0的位置 倒序遍历 如果等于=0 判断之后的值是否存在大于位序的值 存在即可
+//        //继续遍历到下一个零的位置
+//
+//        int length = nums.length;
+//        int point = -1;//0的位置
+//        boolean result = true;//考虑初始能不能过去
+//
+//        if (nums.length == 0 || (nums.length == 1 && nums[0] == 0)) {
+//            return true;
+//        }
+//
+//        for (int i = length - 1; i >= 0; i--) {
+//
+//
+//
+////            if (nums[i] == 0) {//出现0 就可能过不去
+////                //处理间断的情况 前面有0 到这个0 无法跳过
+////                if (point != -1 && !result && i+1 != length) {
+////                    return false;
+////                }
+////                point = i;
+////                result = false;
+////                continue;
+////            }  不对能不能跳过  需要看前面所有的值
+//
+//
+//
+//
+//
+//            if (nums[i] > point - i && point != -1) {
+//                //此时已经有0
+//                //判断当前值 是否大于到0 的位序差
+//                //小于不操作 result=false 大于point =-1 result= true;
+//                point = -1;
+//                result = true;
+//            }
+//            if (nums[i] >= point - i && point == length - 1) {
+//                point = -1;
+//                result = true;
+//            }
+//
+//        }
+//        return result;
+//    }
+
+    /**
+     * 倒排 判断这个点 能否被跳跃 如果可以重置判断点
+     * 不关注0 关注当前点 妙处是区间可以省略
+     * @param nums
+     * @return
+     */
+//    public boolean canJump(int[] nums) {
+//        int len = nums.length;
+//        if (len == 1) {
+//            return true;
+//        }
+//        int flag = len - 1;
+//        for (int i = len - 2; i >= 0; --i) {
+//            // 找到可以跳跃此位置的地方就更新跳跃位置
+//            if (flag - i <= nums[i]) {
+//                flag = i;
+//            }
+//            // 如果跳跃位置到了0就说明可以
+//            if (flag == 0 && i == 0) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    /**
+     * 贪心算法
+     * @param nums
+     * @return
+     */
+//    public boolean canJump(int[] nums) {
+//
+//    }
+
+
+
+
 
 
 
