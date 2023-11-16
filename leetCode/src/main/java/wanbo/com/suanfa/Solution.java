@@ -653,45 +653,65 @@ public class Solution {
     /**
      * 倒排 判断这个点 能否被跳跃 如果可以重置判断点
      * 不关注0 关注当前点 妙处是区间可以省略
+     *
      * @param nums
      * @return
      */
-//    public boolean canJump(int[] nums) {
-//        int len = nums.length;
-//        if (len == 1) {
-//            return true;
-//        }
-//        int flag = len - 1;
-//        for (int i = len - 2; i >= 0; --i) {
-//            // 找到可以跳跃此位置的地方就更新跳跃位置
-//            if (flag - i <= nums[i]) {
-//                flag = i;
-//            }
-//            // 如果跳跃位置到了0就说明可以
-//            if (flag == 0 && i == 0) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public boolean canJump(int[] nums) {
+        int len = nums.length;
+        if (len == 1) {
+            return true;
+        }
+        int flag = len - 1;
+        for (int i = len - 2; i >= 0; --i) {
+            // 找到可以跳跃此位置的地方就更新跳跃位置
+            if (flag - i <= nums[i]) {
+                flag = i;
+            }
+            // 如果跳跃位置到了0就说明可以
+            if (flag == 0 && i == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 贪心算法
+     * 对于数组中的任意位置y,如何判断它是否可以到达？
+     * 只要存在一个位置x,它本身可以到达，且x+nums[x] >= y 那么y也可以到达
+     * 换句话说对于每一个可以到达的位置x 它是得x+1 ..... x+nums[x]都可以到达
+     * 这样我们一次遍历书中的每一个位置，并实时维护最远可达到的位置
+     * 对于当前遍历到的位置x,如果它在当前能达到位置的范围内,那么我们认为x位置可以从七点通过几次跳跃达到,而且当前最远可以达到位置为x+nums[x]
+     * 在遍历过程中，如果最远可以达到的位置大于等于数组的最后一个位置，直接返回true 。反之结束后最后一个位置还是不可到达，则返回false
+     *
      * @param nums
      * @return
      */
-//    public boolean canJump(int[] nums) {
-//
-//    }
+    public boolean canJump1(int[] nums) {
+        int max = 1;
+        if (nums.length ==1){
+            return true;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //最远到达点大于数组长度
+            if (max >= nums.length) {
+                return true;
+            }
+            //当前点不可到达
+            if (i > max - 1) {
+                return false;
+            }
+            //更新最远达到位置
+            max = i + 1 + nums[i] > max ? i + 1 + nums[i] : max;
 
+        }
+        return false;
+    }
 
-
-
-
-
-
-
-
+    public static void main(String[] args) {
+        boolean b = new Solution().canJump1(new int[]{2, 3, 1, 1, 4});
+    }
 
 
 }
