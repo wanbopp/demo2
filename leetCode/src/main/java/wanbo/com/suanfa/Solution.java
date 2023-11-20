@@ -572,6 +572,7 @@ public class Solution {
 
 
     /**
+     * 55.跳跃游戏
      * 给你一个非负整数数组，你最初位于数组的第一个下标，
      * 数组中的每个元素代表你在该位置可以跳跃的最大长度。
      * 判断你是否能到达最后一个下标，如果可以返回true；否则返回false
@@ -690,7 +691,7 @@ public class Solution {
      */
     public boolean canJump1(int[] nums) {
         int max = 1;
-        if (nums.length ==1){
+        if (nums.length == 1) {
             return true;
         }
         for (int i = 0; i < nums.length; i++) {
@@ -709,8 +710,56 @@ public class Solution {
         return false;
     }
 
+    /**
+     * 45.跳跃游戏 II
+     * 给定一个长度为 n 的 0 索引整数数组 nums。初始位置为 nums[0]。
+     * 每个元素 nums[i] 表示从索引 i 向前跳转的最大长度。换句话说，如果你在 nums[i] 处，你可以跳转到任意 nums[i + j] 处:
+     * <p>
+     * 0 <= j <= nums[i]
+     * i + j < n
+     * 返回到达 nums[n - 1] 的最小跳跃次数。生成的测试用例可以到达 nums[n - 1]。
+     * <p>
+     * 示例 1:
+     * 输入: nums = [2,3,1,1,4]
+     * 输出: 2
+     * 解释: 跳到最后一个位置的最小跳跃数是 2。
+     * 从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
+     * 示例 2:
+     * 输入: nums = [2,3,0,1,4]
+     * 输出: 2
+     * <p>
+     * <p>
+     * 提示:
+     * 1 <= nums.length <= 104
+     * 0 <= nums[i] <= 1000
+     * 题目保证可以到达 nums[n-1]
+     */
+    //p1 贪心算法
+    public int jump(int[] nums) {
+        //计数次数
+        int ans = 0;
+
+        //标记每次跳跃的能达到的区间
+        int left = 0;
+        int right = 1;//能跳过第一个肯定不是0
+        //遍历这个区间 这个区间的点能达到的最大区间
+        while (right < nums.length) {
+            int max = 0;
+            for (int i = left; i < right; i++) {
+                max = Math.max(max, nums[i]+i);//这里i在区间内前进
+            }
+            //重置下次遍历的起始位置
+            left = right;
+            right = max + 1;
+            ans++;
+        }
+        return ans;
+    }
+
+
     public static void main(String[] args) {
-        boolean b = new Solution().canJump1(new int[]{2, 3, 1, 1, 4});
+        int b = new Solution().jump(new int[]{2,0,2,0,1});
+
     }
 
 
