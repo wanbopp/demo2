@@ -3,6 +3,7 @@ package wanbo.com.suanfa;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 /**
@@ -746,7 +747,7 @@ public class Solution {
         while (right < nums.length) {
             int max = 0;
             for (int i = left; i < right; i++) {
-                max = Math.max(max, nums[i]+i);//这里i在区间内前进
+                max = Math.max(max, nums[i] + i);//这里i在区间内前进
             }
             //重置下次遍历的起始位置
             left = right;
@@ -756,9 +757,67 @@ public class Solution {
         return ans;
     }
 
+    /**
+     * 274. H 指数
+     * 给你一个整数数组 citation ，其中citation[i] 表示研究者的第 i 篇论文被引用的次数。
+     * 计算病返回该研究者的 H 指数
+     * <p>
+     * 根据维基百科上 H 指数的定义：H 代表高引用次数
+     * 一名科研人员的 H 指数，是指他至少发表了 H 篇论文，并且每篇至少被引用 H 次。如果有多重可能的值，H 指数是指其中最大的那个
+     * <p>
+     * 示例 1：
+     * 输入：citation = [3,0,6,1,5]
+     * 解释：给定数组表示研究者共计五篇论文，每篇论文相应的被引用了 3,0,6,1,5 次
+     * 由于研究者有三篇论文每篇至少被引用了3次，其余两篇每篇论文被引用不多于3次，所以他的H指数是 3
+     * <p>
+     * 示例 2：
+     * 输入：citations = [1,3,1]
+     * 输出：1
+     * <p>
+     * 提示：
+     * n == citations.length
+     * 1 <= n <= 5000
+     * 0 <= citations[i] <= 1000
+     * <p>
+     * 【数组】【计数排序】【排序】
+     */
+    //P1 排序后遍历
+    public int hIndex(int[] citations) {
+        if (citations.length == 1) {
+            return citations[0] > 0 ? 1 : 0;
+        }
+        //冒泡倒叙排序
+        for (int i = citations.length - 1; i > 0; i--) {
+            boolean flag = true;//增加一个标示 如果此次遍历没有发生交换表明已经 排序完成
+            for (int j = 0; j < i; j++) {//冒泡排序要最大的相当于 把最小的往后挪 挪到最后一位  下次遍历可以减少遍历次数
+                if (citations[j] < citations[j + 1]) {
+                    int temp = citations[j + 1];
+                    citations[j + 1] = citations[j];
+                    citations[j] = temp;
+                    flag = false;
+                }
+            }
+            if (flag) {
+                break;
+            }
+        }
+
+        //遍历这个集合 利用H指数的特性 数组从大到小排序后 citation[h] >= h+1 满足H指数 继续向后遍历
+        for (int i = 0; i < citations.length; i++) {
+            if (citations[i] < i + 1) {
+                return i;
+            }
+        }
+
+        return citations.length;
+
+    }
+
+    //P2 计数排序
+    //P3二分搜索
 
     public static void main(String[] args) {
-        int b = new Solution().jump(new int[]{2,0,2,0,1});
+        int i = new Solution().hIndex(new int[]{11,15});
 
     }
 
