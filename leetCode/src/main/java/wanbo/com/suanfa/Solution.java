@@ -1,5 +1,7 @@
 package wanbo.com.suanfa;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -12,7 +14,9 @@ import java.util.*;
  * @Date 2023/10/16 9:05
  * @注释
  */
+@Data
 public class Solution {
+    private Integer num = 0;
 
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         // 最简单的合并-排序
@@ -851,20 +855,20 @@ public class Solution {
         int[] l = new int[nums.length];
         l[0] = 1;//注意这个初始值
         int[] r = new int[nums.length];
-        r[nums.length-1] = 1;
+        r[nums.length - 1] = 1;
 
-        int [] result = new int[nums.length];
+        int[] result = new int[nums.length];
 
         for (int i = 1; i < nums.length; i++) {
-            l[i] = nums[i-1]*l[i-1];
+            l[i] = nums[i - 1] * l[i - 1];
         }
-        for (int i = nums.length-2; i >=0; i--) {
-            r[i] = nums[i+1]* r[i+1];
+        for (int i = nums.length - 2; i >= 0; i--) {
+            r[i] = nums[i + 1] * r[i + 1];
         }
 
 
         for (int i = 0; i < result.length; i++) {
-            result[i] =l[i]*r[i];
+            result[i] = l[i] * r[i];
         }
 
         return result;
@@ -875,11 +879,11 @@ public class Solution {
 
     /**
      * 134. 加油站
-     *
+     * <p>
      * 在一条环路上有 n 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
      * 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
      * 给定两个整数数组 gas 和 cost ，如果你可以按顺序绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1 。<font color="red">如果存在解，则 保证 它是 唯一 的。</font>
-     *
+     * <p>
      * 示例 1:
      * 输入: gas = [1,2,3,4,5], cost = [3,4,5,1,2]
      * 输出: 3
@@ -891,7 +895,7 @@ public class Solution {
      * 开往 2 号加油站，此时油箱有 6 - 4 + 3 = 5 升汽油
      * 开往 3 号加油站，你需要消耗 5 升汽油，正好足够你返回到 3 号加油站。
      * 因此，3 可为起始索引。
-     *
+     * <p>
      * 示例 2:
      * 输入: gas = [2,3,4], cost = [3,4,3]
      * 输出: -1
@@ -902,26 +906,138 @@ public class Solution {
      * 开往 1 号加油站，此时油箱有 3 - 3 + 3 = 3 升汽油
      * 你无法返回 2 号加油站，因为返程需要消耗 4 升汽油，但是你的油箱只有 3 升汽油。
      * 因此，无论怎样，你都不可能绕环路行驶一周。
-     *
+     * <p>
      * 提示:
      * gas.length == n
      * cost.length == n
      * 1 <= n <= 105
      * 0 <= gas[i], cost[i] <= 104
-     *
-     *
+     * <p>
+     * <p>
      * 【数组】【贪心算法】
+     *
      * @param gas
      * @param cost
      * @return
      */
     public int canCompleteCircuit(int[] gas, int[] cost) {
-//        总结：如果x到不了y+1（但能到y），那么从x到y的任一点出发都不可能到达y+1。因为从其中任一点出发的话，相当于从0开始加油，而如果从x出发到该点则不一定是从0开始加油，可能还有剩余的油。既然不从0开始都到不了y+1，那么从0开始就更不可能到达y+1了...
+//        总结：如果x到不了y+1（但能到y），那么从x到y的任一点出发都不可能到达y+1。
+//        因为从其中任一点出发的话，相当于从0开始加油，而如果从x出发到该点则不一定是从0开始加油，可能还有剩余的油。
+//        既然不从0开始都到不了y+1，那么从0开始就更不可能到达y+1了...
+
+        //P1 暴力破解
+        //考虑从任意点出发
+//        for (int i = 0; i < gas.length; i++) {
+//            int j = i;
+//            int remain = gas[i];//剩余
+//
+//            while (remain - cost[j] >= 0) {
+//                //条件是能到达下一站
+//
+//                //更新燃料前进
+//                remain = remain - cost[j] + gas[(j + 1) % gas.length];
+//                //更新位置
+//                j = (j + 1) % gas.length;
+//
+//                //如果回到了原点
+//                if (j == i) {
+//                    return i;
+//                }
+//            }
+//
+//        }
+//        return -1;
 
 
+        //分析暴力破解的缺陷
+        //每一轮都会重复的走一遍i前面的位置
+        //优化:每考虑一个点 时记录他能到达的最远位置和达到最远距离时剩余的油量
+
+        //p2 记录能到到的最远位置
+//        int[] farIndex = new int[gas.length];
+//        for (int i = 0; i < farIndex.length; i++) {
+//            farIndex[i] = -1;
+//        }
+//        //记录到到最远位置时的剩余油量
+//        int[] farIndexRemain = new int[gas.length];
+//
+//
+//        for (int i = 0; i < gas.length; i++) {
+//            int j = i;
+//            int remain = gas[i];//剩余
+//
+//            while (remain - cost[j] >= 0) {
+//                //条件是能到达下一站
+//
+//                //到达下一个点的剩余
+//                remain = remain - cost[j];
+//
+//                //更新位置
+//                j = (j + 1) % gas.length;
+//
+//                //判断下一个点有没有走过
+//                if (farIndex[j] != -1) {
+//                    //当前点走过 更新位置和燃料剩余
+//                    j = farIndex[j];
+//                    remain = remain + farIndexRemain[j];
+//                } else {
+//                    //加上当前点的补给
+//                    remain = remain + gas[j];
+//                }
+//
+//
+//                //如果回到了原点
+//                if (j == i) {
+//                    return i;
+//                }
+//            }
+//
+//            //记录当前点的能达到的最远位置
+//            farIndex[i] = j;
+//            farIndexRemain[i] = remain;
+//        }
+//        return -1;
 
 
+        //P3继续优化
+        //当考虑i能到达最远的时候，假设是j。那么i+1到j之间的节点是不是就不可能绕一圈了？
+        //假设i+1的节点能绕一圈，那么意味着从i+1开始一定能到达j+1。
+        //又因为从i能到达i+1，所以i也能到达j+1。
+        //但事实上，i最远能到达j。产生矛盾，所有i+1的节点一定不能绕一圈。同理，其他也是一样的证明。
+        //所以下次的i我们不需要从i+1开始考虑，直接从j+1开始考虑即可。
+        //还有一种情况，就是因为达到末尾的时候，回到0
+        //如果i最远能够到达j，根据上边的结论i+1到j之间的节点都不可能绕一圈了。想象成一个圆，所以i后面的节点就都不需要考虑了，直接返回-1即可
+        //问题的关键是 如果选择i作为起点 恰好无法走到 j,那么i和j中间的点，都不可能作为起点？？？？
+        for (int i = 0; i < gas.length; i++) {
+            int j = i;
+            int remain = gas[i];//剩余
 
+            while (remain - cost[j] >= 0) {
+                //条件是能到达下一站
+
+                //减去花费 加上补给
+                remain = remain - cost[j] + gas[(j + 1) % gas.length];
+
+                //更新位置
+                j = (j + 1) % gas.length;
+
+                //j 回到了 i
+                if (j == i) {
+                    return i;
+                }
+            }
+                //最远距离绕道了之前 所以i后面的都不可能绕一圈了
+                if (j < i) {
+                    return -1;
+                }
+
+                //i直接跳到j,外层for循环执行++，相当于从j+1 开始考虑
+                i = j;
+            }
+
+              return -1;
+
+        //P3 这道题肯定不是通过简单的剪枝来优化暴力解法的效率，而是需要我们发现一些 隐藏较深的规律，从而减少一些融于的计算
 
     }
 
@@ -931,9 +1047,20 @@ public class Solution {
 
 
 
-    public static void main(String[] args) {
-         new Solution().productExceptSelf(new int[]{1,2,3,4});
 
+
+
+
+
+
+
+
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] gas = new int[]{3, 3, 4};
+        int[] cost = new int[]{3, 4, 4};
+        int i = solution.canCompleteCircuit(gas, cost);
     }
 
 
