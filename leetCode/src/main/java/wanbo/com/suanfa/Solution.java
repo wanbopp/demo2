@@ -1026,41 +1026,78 @@ public class Solution {
                     return i;
                 }
             }
-                //最远距离绕道了之前 所以i后面的都不可能绕一圈了
-                if (j < i) {
-                    return -1;
-                }
-
-                //i直接跳到j,外层for循环执行++，相当于从j+1 开始考虑
-                i = j;
+            //最远距离绕道了之前 所以i后面的都不可能绕一圈了
+            if (j < i) {
+                return -1;
             }
 
-              return -1;
+            //i直接跳到j,外层for循环执行++，相当于从j+1 开始考虑
+            i = j;
+        }
+
+        return -1;
 
         //P3 这道题肯定不是通过简单的剪枝来优化暴力解法的效率，而是需要我们发现一些 隐藏较深的规律，从而减少一些融于的计算
 
     }
 
 
+    /**
+     * 135.分发糖果
+     * n个孩子站成一排。给你一个整数数组ratings表示给每个孩子评分。
+     * 你需要按照以下要求，给这些孩子分发糖果：
+     * 1、每个孩子至少分配到一个糖果
+     * 2、相邻两个孩子评分更高的孩子会获得更多糖果。
+     * 请你给孩子们分发糖果，计算并返回需要准备的最少的糖果的数量。
+     * 实例1：
+     * 输入：ratings = [1,0,2]
+     * 输出：5
+     * 解释：你可以分别给这三个孩子分发 2、1、2 个糖果。
+     */
+
+    public int candy(int[] ratings) {
+        //区分递增和递减 注意分界点属于两边
+        int dec = 0;//当前递减序列长度
+        int inc = 1;//当前递减序列前递增序列的长度
+
+        int pre = 1;//前一个同学分配的糖果数量
+
+        int candy = 1;//记录糖果数量
+
+        for (int i = 1; i < ratings.length; i++) {
+            //比较前一个值
+            if (ratings[i] >= ratings[i - 1]) {
+                dec = 0;//递减序列归零
+                pre = ratings[i] == ratings[i - 1] ? 1 : pre + 1;//前一个值 如果前面分值=当前分值 则当前糖果为1 否则前面糖果+1
+                candy += pre;//糖果总数量
+                inc = pre;//更新递增序列 等于当前的糖果数
+            } else {
+                //inc = 0;//递增归零 （每次转折时已经被充值了）
+                dec++;//递减+1
+
+                //如果前面的的递增序列等于后面的递减序列 后面增加糖果时需要考虑这个元素
+                if (dec == inc) {
+                    dec++;
+                }
+
+                //递减序列中所有人的糖果数+1
+                candy += dec;
+
+                pre = 1;//递减序列的最小元素分得糖果=1
+
+            }
 
 
+        }
 
-
-
-
-
-
-
-
-
-
+        return candy;
+    }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] gas = new int[]{3, 3, 4};
-        int[] cost = new int[]{3, 4, 4};
-        int i = solution.canCompleteCircuit(gas, cost);
+        int[] cost = new int[]{5,3,2,2,3,4,5,4,4,3};
+        int candy = solution.candy(cost);
     }
 
 
