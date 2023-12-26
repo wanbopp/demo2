@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
 
@@ -1094,10 +1096,80 @@ public class Solution {
     }
 
 
+    /**
+     * 42.接雨水
+     * 给定n个非负整数表示每个宽度为1的柱子的高度图，计算按此排列的柱子，下雨之后能积多少雨水
+     * <p>
+     * 示例：
+     * 输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+     * 输出：6
+     * <p>
+     * 示例 2：
+     * 输入：height = [4,2,0,3,2,5]
+     * 输出：9
+     * <p>
+     * 提示：
+     * n == height.length
+     * 1 <= n <= 2 * 104
+     * 0 <= height[i] <= 105
+     * <p>
+     * 【栈】【数组】【双指针】【动态规划】【单调栈】
+     */
+
+    public int trap(int[] height) {
+        //关键是找到每个位置能存储的水量
+
+        //P1 动态规划
+        //将现实问题与动态规划关联起来，找到每一个位置的左右的最大高度，min(leftMax[i],rightMax[i]) - height[i] 等于当前位置的储水量
+
+        //定义一个左边最大值数组、右边最大值数组
+        int[] leftMax = new int[height.length];//表示当前点的 左边的最大高度
+        int[] rightMax = new int[height.length];//表示当前点的 右边的最大高度
+
+        //确定初始状态
+        leftMax[0] = height[0];
+        rightMax[height.length - 1] = height[height.length - 1];
+        int capacity = 0;
+
+        //确定关联关系
+        for (int i = 1; i < height.length; i++) {
+            //当前点最高时 leftMax的值该是多少
+            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+        }
+        for (int i = height.length - 2; i >= 0; i--) {
+            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+        }
+
+        for (int i = 0; i < height.length; i++) {
+            capacity += Math.min(leftMax[i], rightMax[i]) - height[i];
+        }
+
+        return capacity;
+
+        //时间复杂度：O(n),其中数组height的长度，计算leftMax[] 和 rightMax[]的元素各需要遍历一次，计算能接到的雨水总量还需要遍历一次
+        //空间复杂度：O(n),其中n 是数组height的长度。需要创建两个长度为n的数组 leftMax和rightMax
+
+
+        //P2 单调栈
+        //一次遍历 单调栈 遇到不是单调时开始弹栈计算
+        //需要一个栈 一个总数计数器
+
+
+
+
+
+        //P3 双指针
+
+
+
+
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] cost = new int[]{5,3,2,2,3,4,5,4,4,3};
-        int candy = solution.candy(cost);
+        int[] cost = new int[]{4, 2, 0, 3, 2, 5};
+        int candy = solution.trap(cost);
     }
 
 
