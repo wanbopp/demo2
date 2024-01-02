@@ -1123,28 +1123,28 @@ public class Solution {
         //将现实问题与动态规划关联起来，找到每一个位置的左右的最大高度，min(leftMax[i],rightMax[i]) - height[i] 等于当前位置的储水量
 
         //定义一个左边最大值数组、右边最大值数组
-        int[] leftMax = new int[height.length];//表示当前点的 左边的最大高度
-        int[] rightMax = new int[height.length];//表示当前点的 右边的最大高度
+//        int[] leftMax = new int[height.length];//表示当前点的 左边的最大高度
+//        int[] rightMax = new int[height.length];//表示当前点的 右边的最大高度
+//
+//        //确定初始状态
+//        leftMax[0] = height[0];
+//        rightMax[height.length - 1] = height[height.length - 1];
+//        int capacity = 0;
+//
+//        //确定关联关系
+//        for (int i = 1; i < height.length; i++) {
+//            //当前点最高时 leftMax的值该是多少
+//            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+//        }
+//        for (int i = height.length - 2; i >= 0; i--) {
+//            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+//        }
+//
+//        for (int i = 0; i < height.length; i++) {
+//            capacity += Math.min(leftMax[i], rightMax[i]) - height[i];
+//        }
 
-        //确定初始状态
-        leftMax[0] = height[0];
-        rightMax[height.length - 1] = height[height.length - 1];
-        int capacity = 0;
-
-        //确定关联关系
-        for (int i = 1; i < height.length; i++) {
-            //当前点最高时 leftMax的值该是多少
-            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
-        }
-        for (int i = height.length - 2; i >= 0; i--) {
-            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
-        }
-
-        for (int i = 0; i < height.length; i++) {
-            capacity += Math.min(leftMax[i], rightMax[i]) - height[i];
-        }
-
-        return capacity;
+        //        return capacity;
 
         //时间复杂度：O(n),其中数组height的长度，计算leftMax[] 和 rightMax[]的元素各需要遍历一次，计算能接到的雨水总量还需要遍历一次
         //空间复杂度：O(n),其中n 是数组height的长度。需要创建两个长度为n的数组 leftMax和rightMax
@@ -1153,15 +1153,38 @@ public class Solution {
         //P2 单调栈
         //一次遍历 单调栈 遇到不是单调时开始弹栈计算
         //需要一个栈 一个总数计数器
+        Deque<Integer> stack = new ArrayDeque<>();
+        int capacity = 0;
+
+        //一次循环
+        for (int i = 0; i < height.length; i++) {
+            //判断是不是单调栈 不是单调栈开始出栈计算 直到继续单调
+            while (!stack.isEmpty() && height[i] > height[stack.peek()]) {
+                //开始计算
 
 
+                //弹出元素
+                Integer pop = stack.pop();
 
+                //如果栈元素全部弹出
+                if (stack.isEmpty()) {
+                    break;
+                }
+                //计算当前元素 和 栈顶元素 和 height[i] 雨水面积
+                Integer top = stack.peek();
+                int weight = i - top - 1;
+                int tall = Math.min(height[top], height[i]) - height[pop];
+                capacity += weight * tall;
+
+            }
+            //是单调栈-入栈 继续向前
+
+            stack.push(i);
+        }
+        return capacity;
 
 
         //P3 双指针
-
-
-
 
 
     }
