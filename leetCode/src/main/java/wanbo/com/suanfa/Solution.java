@@ -1189,10 +1189,85 @@ public class Solution {
 
     }
 
+    /**
+     * 13.罗马数字转整数
+     * 罗马数字包含以下七种字符 I，V，X，L，C，D和 M
+     * 字符          数值
+     * I             1
+     * V             5
+     * X             10
+     * L             50
+     * C             100
+     * D             500
+     * M             1000
+     * 例如：数字 2 写作 II ，即为两个并列I。12 写作 XII，27写作XXVII
+     * 通常情况下，罗马数字中小的数字在大的数字右边。但也存在特例
+     * I可以放在V或者X的左边表示 4 或者 9
+     * X可以放在L或者C的左边表示 40 或者 90
+     * C可以放在D或M的左边表示 400 或者 900
+     * 给定一个罗马数字转换为整数
+     *
+     * 示例 1:
+     * 输入: s = "III"
+     * 输出: 3
+     *
+     * 示例 2:
+     * 输入: s = "IV"
+     * 输出: 4
+     *
+     * 示例 3:
+     * 输入: s = "IX"
+     * 输出: 9
+     *
+     * 示例 4:
+     * 输入: s = "LVIII"
+     * 输出: 58
+     * 解释: L = 50, V= 5, III = 3
+     *
+     * 示例 5:
+     * 输入: s = "MCMXCIV"
+     * 输出: 1994
+     * 解释: M = 1000, CM = 900, XC = 90, IV = 4
+     *
+     */
+    public int romanToInt(String s) {
+        //一个map（hash表）存入映射关系，同时记录最大值
+        //字符串转换为字符数组遍历 从左向右遍历
+
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("I", 1);
+        map.put("V", 5);
+        map.put("X", 10);
+        map.put("L", 50);
+        map.put("C", 100);
+        map.put("D", 500);
+        map.put("M", 1000);
+
+
+        char[] chars = s.toCharArray();
+        int n = chars.length;
+
+        int num = 0;
+        int flag = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            char aChar = chars[i];
+            Integer i1 = map.get(String.valueOf(aChar));
+            if (i1 >= flag) {
+                num += i1;
+                flag = i1;
+            } else {
+                num = num - i1;
+            }
+        }
+        return num;
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] cost = new int[]{4, 2, 0, 3, 2, 5};
-        int candy = solution.trap(cost);
+        String s = "MCMXCIV";
+        int candy = solution.romanToInt(s);
     }
 
 
