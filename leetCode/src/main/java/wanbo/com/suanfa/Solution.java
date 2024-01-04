@@ -1206,29 +1206,28 @@ public class Solution {
      * X可以放在L或者C的左边表示 40 或者 90
      * C可以放在D或M的左边表示 400 或者 900
      * 给定一个罗马数字转换为整数
-     *
+     * <p>
      * 示例 1:
      * 输入: s = "III"
      * 输出: 3
-     *
+     * <p>
      * 示例 2:
      * 输入: s = "IV"
      * 输出: 4
-     *
+     * <p>
      * 示例 3:
      * 输入: s = "IX"
      * 输出: 9
-     *
+     * <p>
      * 示例 4:
      * 输入: s = "LVIII"
      * 输出: 58
      * 解释: L = 50, V= 5, III = 3
-     *
+     * <p>
      * 示例 5:
      * 输入: s = "MCMXCIV"
      * 输出: 1994
      * 解释: M = 1000, CM = 900, XC = 90, IV = 4
-     *
      */
     public int romanToInt(String s) {
         //一个map（hash表）存入映射关系，同时记录最大值
@@ -1262,12 +1261,74 @@ public class Solution {
         return num;
     }
 
+    /**
+     * 12.整数转罗马数字
+     * 罗马数字包含以下七种字符 I，V，X，L，C，D和 M
+     * 字符          数值
+     * I             1
+     * V             5
+     * X             10
+     * L             50
+     * C             100
+     * D             500
+     * M             1000
+     * 例如：数字 2 写作 II ，即为两个并列I。12 写作 XII，27写作XXVII
+     * 通常情况下，罗马数字中小的数字在大的数字右边。但也存在特例
+     * I可以放在V或者X的左边表示 4 或者 9
+     * X可以放在L或者C的左边表示 40 或者 90
+     * C可以放在D或M的左边表示 400 或者 900
+     * 给定一个整数转换为罗马数字
+     * <p>
+     * 示例 1:
+     * 输入: num = 3
+     * 输出: "III"
+     * <p>
+     * 示例 2:
+     * 输入: num = 4
+     * 输出: "IV"
+     * <p>
+     * 示例 3:
+     * 输入: num = 9
+     * 输出: "IX"
+     * <p>
+     * 示例 4:
+     * 输入: num = 58
+     * 输出: "LVIII"
+     * 解释: L = 50, V = 5, III = 3.
+     * <p>
+     * 示例 5:
+     * 输入: num = 1994
+     * 输出: "MCMXCIV"
+     * 解释: M = 1000, CM = 900, XC = 90, IV = 4.
+     * <p>
+     * 提示：
+     * 1 <= num <= 3999
+     */
+    public String intToRoman(int num) {
+        //P1硬编码解法  整数每个位 只能对应9种状态
+        String[] ones = new String[]{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        String[] tens = new String[]{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        String[] hundreds = new String[]{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+        String[] thousands = new String[]{"", "M", "MM", "MMM"};
+
+        //巧妙解法不用循环直接拿到 每个位的值
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(thousands[num / 1000]);
+        stringBuilder.append(hundreds[num % 1000 / 100]);
+        stringBuilder.append(tens[num % 100 / 10]);
+        stringBuilder.append(ones[num % 10]);
+        return stringBuilder.toString();
+
+        //贪心算法
+
+
+    }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String s = "MCMXCIV";
-        int candy = solution.romanToInt(s);
+        int num = 1994;
+        String s = solution.intToRoman(num);
     }
 
 
