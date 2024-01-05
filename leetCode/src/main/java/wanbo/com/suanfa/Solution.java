@@ -1305,31 +1305,100 @@ public class Solution {
      * 1 <= num <= 3999
      */
     public String intToRoman(int num) {
-        //P1硬编码解法  整数每个位 只能对应9种状态
-        String[] ones = new String[]{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
-        String[] tens = new String[]{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
-        String[] hundreds = new String[]{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
-        String[] thousands = new String[]{"", "M", "MM", "MMM"};
+//        //P1硬编码解法  整数每个位 只能对应9种状态
+//        String[] ones = new String[]{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+//        String[] tens = new String[]{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+//        String[] hundreds = new String[]{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+//        String[] thousands = new String[]{"", "M", "MM", "MMM"};
+//
+//        //巧妙解法不用循环直接拿到 每个位的值
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append(thousands[num / 1000]);
+//        stringBuilder.append(hundreds[num % 1000 / 100]);
+//        stringBuilder.append(tens[num % 100 / 10]);
+//        stringBuilder.append(ones[num % 10]);
+//        return stringBuilder.toString();
 
-        //巧妙解法不用循环直接拿到 每个位的值
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(thousands[num / 1000]);
-        stringBuilder.append(hundreds[num % 1000 / 100]);
-        stringBuilder.append(tens[num % 100 / 10]);
-        stringBuilder.append(ones[num % 10]);
-        return stringBuilder.toString();
+        //P2模拟 (类似贪心算法)(需要枚举出 所有的数字-罗马数的映射情况)
+        //罗马数字的唯一表示法:对于罗马数字从左到右的每一位，选择尽可能大的符号值。对于140 第一位选择C 接下来选择40
 
-        //贪心算法
+        HashMap<Integer, String> map = new LinkedHashMap<>();
+        map.put(1000, "M");
+        map.put(900, "CM");
+        map.put(500, "D");
+        map.put(400, "CD");
+        map.put(100, "C");
+        map.put(90, "XC");
+        map.put(50, "L");
+        map.put(40, "XL");
+        map.put(10, "X");
+        map.put(9, "IX");
+        map.put(5, "V");
+        map.put(4, "IV");
+        map.put(1, "I");
 
+        StringBuilder builder = new StringBuilder();
+        while (num > 0) {
+            for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                if (num >= entry.getKey()) {
+                    num -= entry.getKey();
+                    builder.append(entry.getValue());
+                    break;
+                }
+            }
+        }
+
+        return builder.toString();
 
     }
 
+    /**
+     * 58. 最后一个单词的长度
+     * 给你一个字符串s,由若干单词组成，单词前后用一些空格字符隔开。返回字符串中最后一个单词的长度
+     * 单词是指仅有字母组成、不包含任何任何字符的最大字符串
+     * <p>
+     * 示例 1：
+     * 输入：s = "Hello World"
+     * 输出：5
+     * 解释：最后一个单词是“World”，长度为5。
+     * <p>
+     * 示例 2：
+     * 输入：s = "   fly me   to   the moon  "
+     * 输出：4
+     * 解释：最后一个单词是“moon”，长度为4。
+     * <p>
+     * 示例 3：
+     * 输入：s = "luffy is still joyboy"
+     * 输出：6
+     * 解释：最后一个单词是长度为6的“joyboy”。
+     * <p>
+     * 提示：
+     * 1 <= s.length <= 104
+     * s 仅有英文字母和空格 ' ' 组成
+     * s 中至少存在一个单词
+     */
+    public int lengthOfLastWord(String s) {
+        char[] chars = s.toCharArray();
+        //倒叙遍历
+        int after = 0;
+        for (int i = chars.length - 1; i >= 0; i--) {
+            //如果是 空格 指针往前
+            if (chars[i] != ' ') {
+                after++;
+            } else if (after > 0 && chars[i] == ' ') {
+                break;
+            }
+        }
+        return after;
+
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int num = 1994;
-        String s = solution.intToRoman(num);
+        String s = "luffy is still joyboy";
+        solution.lengthOfLastWord(s);
     }
 
 
 }
+
