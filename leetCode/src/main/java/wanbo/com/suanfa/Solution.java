@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @version 1.0
@@ -1393,10 +1394,92 @@ public class Solution {
 
     }
 
+
+    /**
+     * 14.最长公共前缀
+     * 编写一个函数来查找字符串数组中的最长公共前缀。
+     * 如果不存在公共前缀，返回空字符串 ""。
+     * <p>
+     * 示例 1：
+     * 输入：strs = ["flower","flow","flight"]
+     * 输出："fl"
+     * <p>
+     * 示例 2：
+     * 输入：strs = ["dog","racecar","car"]
+     * 输出：""
+     * 解释：输入不存在公共前缀。
+     * <p>
+     * 提示：
+     * 1 <= strs.length <= 200
+     * 0 <= strs[i].length <= 200
+     * strs[i] 仅由小写英文字母组成
+     * 【字典树】【字符串】
+     */
+    public String longestCommonPrefix(String[] strs) {
+        String pre = "";//可以直接是第一个元素
+//        //P1横向扫描
+//        //依次向后扫描记录最大公共前缀遇到空字符串直接返回
+//        for (int i = 0; i < strs.length; i++) {
+//            String temp = "";
+//            if (i == 0) {//第一个元素
+//                temp = strs[i];
+//            } else if (strs[i] == "" || pre == "") {//遍历到 "" 或者过程中 pre =="" 直接返回
+//                return "";
+//            } else {//找到pre和strs[i]的最大公众前缀
+//                int min = Math.min(pre.length(), strs[i].length());
+//                char[] preCharArray = pre.toCharArray();
+//                char[] nowCharArray = strs[i].toCharArray();
+//                for (int j = 0; j < min; j++) {
+//                    if (preCharArray[j] != nowCharArray[j]) {
+//                        break;
+//                    } else {
+//                        temp = temp + preCharArray[j];
+//                    }
+//                }
+//            }
+//            pre = temp;
+//        }
+//        //时间复杂度 O(mn)m字符串的平均长度 n字符串的数量
+//        //空间复杂度 O(1);
+
+
+        //P2纵向扫描
+        //比较每个字符串i位置的字符相等数目 当i位置相等数目不等于strs.length()时 此时i即为最大公共前缀的长度;
+        pre = strs[0];
+        for (int i = 0; i < strs[0].length(); i++) {
+            int count = strs.length;
+            char c = strs[0].toCharArray()[i];
+
+            //遍历查看后面的所有字符串 在当前i位置是否 都相等
+            for (int j = 1; j < count; j++) {
+                //不想等 或者 最后一次循环(包括别的字符串达到最大长度) 返回结果
+                if (i == strs[j].length() || strs[j].toCharArray()[i] != c) {
+                    pre = strs[0].substring(0, i);
+                }
+            }
+        }
+
+        return pre;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String s = "luffy is still joyboy";
-        solution.lengthOfLastWord(s);
+        String[] strs = new String[]{"a"};
+        solution.longestCommonPrefix(strs);
+
     }
 
 
