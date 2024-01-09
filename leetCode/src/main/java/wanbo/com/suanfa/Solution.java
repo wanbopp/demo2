@@ -1463,22 +1463,80 @@ public class Solution {
 
     }
 
+    /**
+     * 151.反转字符串中的单词
+     * 给你一个字符串s,请你反转字符串中的单词顺序
+     * 单词 是由非空格字符组成的字符串。S中至少一个空格将字符串中的单词分隔开
+     * 返回的单词顺序颠倒且单词之间用空格链接的结果字符串
+     * 注意输入的字符串s中可能会存在前导空格、尾随空格或单词间的多个空格。返回的结果字符中，单词应当仅用单个空格分割，切不包含任何额外的空格
+     * <p>
+     * 示例 1：
+     * 输入：s = "the sky is blue"
+     * 输出："blue is sky the"
+     * <p>
+     * 示例 2：
+     * 输入：s = "  hello world  "
+     * 输出："world hello"
+     * 解释：反转后的字符串中不能存在前导空格和尾随空格。
+     * <p>
+     * 示例 3：
+     * 输入：s = "a good   example"
+     * 输出："example good a"
+     * 解释：如果两个单词间有多余的空格，反转后的字符串需要将单词间的空格减少到仅有一个。
+     * <p>
+     * 提示：
+     * 1 <= s.length <= 104
+     * s 包含英文大小写字母、数字和空格 ' '
+     * s 中 至少存在一个 单词
+     */
+    public String reverseWords(String s) {
+        //P1双指针
+        char[] chars = s.toCharArray();
+        int length = chars.length;
+        int left = length - 1;
+        int right = length;
+
+        String result = "";
+        while (left >= -1) {
+
+            if (left == -1) {//如果到达第一个元素
+                if (left - right != -1) { //如果left和right不在同一位置 且当前left 为空格 截下这个单词拼接到result上 且末尾+空格
+                    result = result + s.substring(left + 1, right);
+                }
+                break;
+            }
+
+            if (chars[left] == ' ') {//当前left 为空格
+                //如果left和right不在同一位置 截下这个单词拼接到result上 且末尾+空格
+                if (left - right != -1) {
+                    result = result + s.substring(left + 1, right) + " ";
+                }
+                //left继续前移 right重置到原先left的位置
+                right = left;
+
+            }
+            left--;
 
 
+        }
+
+        //祛除末尾的空格
+        if (result.endsWith(" ")) {
+            result = result.substring(0, result.length() - 1);
+        }
+
+        return result;
 
 
-
-
-
-
-
-
+        //p2 Java自带的官方API split reverse 和join完成
+    }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String[] strs = new String[]{"a"};
-        solution.longestCommonPrefix(strs);
+        String s = "a good   example";
+        String s1 = solution.reverseWords(s);
+        System.out.println("s1 = " + s1);
 
     }
 
