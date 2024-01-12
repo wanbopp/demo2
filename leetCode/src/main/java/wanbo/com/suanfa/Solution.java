@@ -1531,12 +1531,87 @@ public class Solution {
         //p2 Java自带的官方API split reverse 和join完成
     }
 
+    /**
+     * 6.Z字形变换
+     * 将一个给定字符串s根据给定的行数numRows, 以从上往下，从左到右进行Z字型排列
+     * 比如输入字符串为"PAYPALISHIRING"行数为3时，排列如下(字符串进行行数3 进行Z字形排列)
+     * P   A   H   N
+     * A P L S I I G
+     * Y   I   R
+     * 之后，你的输出需要从左往右逐行读取，产生一个新的字符串。比如 "PAHNAPLSIIGYIR"
+     * <p>
+     * 示例 1：
+     * 输入：s = "PAYPALISHIRING", numRows = 3
+     * 输出："PAHNAPLSIIGYIR"
+     * <p>
+     * 示例 2：
+     * 输入：s = "PAYPALISHIRING", numRows = 4
+     * 输出："PINALSIGYAHRPI"
+     * 解释：
+     * P     I    N
+     * A   L S  I G
+     * Y A   H R
+     * P     I
+     * <p>
+     * 示例 3：
+     * 输入：s = "A", numRows = 1
+     * 输出："A"
+     * <p>
+     * <p>
+     * 提示：
+     * 1 <= s.length <= 1000
+     * s 由英文字母（小写和大写）、',' 和 '.' 组成
+     * 1 <= numRows <= 1000
+     */
+    public String convert(String s, int numRows) {
+        //P1利用二维矩阵模拟 字符串转换到矩阵内在读取
+        int length = s.length();
+        //如果s长度小于numRows || 列数为 1 直接返回
+        if (length <= numRows || numRows ==1 ) {
+            return s;
+        }
+
+        //确认矩阵大小 高度=numRows
+        //一个周期内 占用多少列 1+r-2 = r-1列
+        //共有周期 length/2r-2
+        //占用多少字符r+r-2 个字符
+        int m = (length / (2 * numRows - 2) + 1) * (numRows - 1);
+        int n = numRows;
+
+        char[][] matrix = new char[m][n];
+        //确认写入 规则
+        //周期性 编号除以 2r-2 取余 小于等于r向下 大于r向右上 等于0呢也是右上
+        int x = 0;
+        int y = 0;
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < length; i++) {
+            matrix[x][y] = chars[i];
+            int temp = i % (2 * numRows - 2);//在周期内的位置
+            if (temp < numRows - 1) {
+                y++;
+            } else {
+                x++;
+                y--;
+            }
+        }
+
+
+        //矩阵读取
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (matrix[j][i] != 0 && matrix[j][i] != ' ') {
+                    builder.append(matrix[j][i]);
+                }
+            }
+        }
+        return builder.toString();
+
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String s = "a good   example";
-        String s1 = solution.reverseWords(s);
-        System.out.println("s1 = " + s1);
+        solution.convert("PAYPALISHIRING", 3);
 
     }
 
