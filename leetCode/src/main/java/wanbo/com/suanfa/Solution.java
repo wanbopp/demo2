@@ -1567,7 +1567,7 @@ public class Solution {
         //P1利用二维矩阵模拟 字符串转换到矩阵内在读取
         int length = s.length();
         //如果s长度小于numRows || 列数为 1 直接返回
-        if (length <= numRows || numRows ==1 ) {
+        if (length <= numRows || numRows == 1) {
             return s;
         }
 
@@ -1609,9 +1609,42 @@ public class Solution {
 
     }
 
+
+    /**
+     * 28. 找出字符串中第一个匹配项的下标
+     */
+    public int strStr(String haystack, String needle) {
+        //双指针 只遍历一次 目标序别
+        int m = 0;
+        int n = 0;
+
+        char[] chars = haystack.toCharArray();
+        char[] aim = needle.toCharArray();
+
+        while (m <= chars.length) {
+            if (n == aim.length) {
+                return m - n;
+            } else if (m == chars.length) {
+                return -1;
+            } else if (chars[m] == aim[n]) {
+                m++;
+                n++;
+            } else if (n != 0) {
+                m = m - n + 1;
+                n = 0;
+            } else {
+                m++;
+            }
+        }
+
+        return -1;
+
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.convert("PAYPALISHIRING", 3);
+        int i = solution.strStr("leetcode", "leete");
 
     }
 
