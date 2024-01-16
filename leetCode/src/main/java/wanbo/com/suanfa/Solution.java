@@ -1642,10 +1642,136 @@ public class Solution {
     }
 
 
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        int i = solution.strStr("leetcode", "leete");
+    /**
+     * 68. 文本左右对齐
+     * 给定一个是单词数组 words 和一个长度 maxWidth，重新排班单词使其成为每行恰好有maxWidth个字符
+     * 且左右两端的文本对齐
+     * 你应该使用 贪心算法 来放置单词，也就是说，尽可能多的往每行中放置单词。必要时使用 ' '填充，
+     * 使得每行恰好有MaxWidth个字符
+     * 要求尽可能均匀分配单词间的空格数量。如果某一行单词间的空格不能均匀分配，则左侧放置的空格数要多于右侧的空格数
+     * 文本最后一行应为左对齐，且单词之间不插入额外的空格
+     * <p>
+     * 注意；单词是指非空格字符组成的字符序列
+     * 每个单词的长度大于0，小于等于maxWidth
+     * 输入单词数组字少包含一个单词
+     * <p>
+     * 示例 1:
+     * 输入: words = ["This", "is", "an", "example", "of", "text", "justification."], maxWidth = 16
+     * 输出:
+     * [
+     * "This    is    an",
+     * "example  of text",
+     * "justification.  "
+     * ]
+     * <p>
+     * <p>
+     * 示例 2:
+     * 输入:words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
+     * 输出:
+     * [
+     * "What   must   be",
+     * "acknowledgment  ",
+     * "shall be        "
+     * ]
+     * 解释: 注意最后一行的格式应为 "shall be    " 而不是 "shall     be",
+     * 因为最后一行应为左对齐，而不是左右两端对齐。
+     * 第二行同样为左对齐，这是因为这行只包含一个单词。
+     * <p>
+     * 示例 3:
+     * 输入:words = ["Science","is","what","we","understand","well","enough","to","explain","to","a","computer.","Art","is","everything","else","we","do"]，maxWidth = 20
+     * 输出:
+     * [
+     * "Science  is  what we",
+     * "understand      well",
+     * "enough to explain to",
+     * "a  computer.  Art is",
+     * "everything  else  we",
+     * "do                  "
+     * ]
+     * <p>
+     * 提示:
+     * 1 <= words.length <= 300
+     * 1 <= words[i].length <= 20
+     * words[i] 由小写英文字母和符号组成
+     * 1 <= maxWidth <= 100
+     * words[i].length <= maxWidth
+     */
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        // 遍历这个串找到字符长度和字符个数
+        List<String> strings = new ArrayList<>();
+        int right = 0;// 记录当前行最右边单词的位置
+        int n = words.length;
 
+        while (true) {
+            int left = right;// 当前当前行的 第一个单词在words的位置
+            int sumLen = 0;// 统计这一行单词的长度之和
+
+            // 通过循环确定当前行能容纳的单词数
+            while (right < n && sumLen + words[right].length() + right - left <= maxWidth) {// right- left表示最少的空格数
+                sumLen = sumLen + words[right].length();
+                right++;// right ++（先把right赋值给运算语句在 ++）
+            }
+
+            // 如果是最后一行，单词左对齐，且单词之间只有一个空格，在行末填充剩余空格
+            if (right == n) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(join(words, left, right, " "));
+                builder.append(blank(maxWidth - builder.length()));// 填充剩余空格
+
+                strings.add(builder.toString());
+                return strings;
+            }
+
+            // 计算单词数
+            int wordsNum = right - left;
+            // 剩余的位置 全部的空格数
+            int spaceNum = maxWidth - sumLen;
+
+            // 当前行只有一个单词，该单词左对齐，在行末填充剩余空格
+            if (wordsNum == 1) {
+                StringBuffer buffer = new StringBuffer(words[left]);
+                buffer.append(blank(spaceNum));
+
+                strings.add(buffer.toString());
+                continue;
+            }
+
+            // 当前行不止一个单词
+            int avgSpaces = spaceNum / (wordsNum - 1);
+            int extraSpaces = spaceNum % (wordsNum - 1);
+            StringBuffer sb = new StringBuffer();
+            sb.append(join(words, left, left + extraSpaces + 1, blank(avgSpaces + 1))); // 拼接额外加一个空格的单词
+            sb.append(blank(avgSpaces));
+            sb.append(join(words, left + extraSpaces + 1, right, blank(avgSpaces))); // 拼接其余单词
+            strings.add(sb.toString());
+        }
+
+    }
+
+    // blank 返回长度为 n 的由空格组成的字符串
+    public String blank(int n) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < n; ++i) {
+            sb.append(' ');
+        }
+        return sb.toString();
+    }
+
+    // join 返回用 sep 拼接 [left, right) 范围内的 words 组成的字符串
+    public StringBuffer join(String[] words, int left, int right, String sep) {
+        StringBuffer sb = new StringBuffer(words[left]);
+        for (int i = left + 1; i < right; ++i) {
+            sb.append(sep);
+            sb.append(words[i]);
+        }
+        return sb;
+    }
+
+
+    public static void main(String[] args) {
+        int a = 0;
+        int c = a++;
+        int b = ++a;
     }
 
 
