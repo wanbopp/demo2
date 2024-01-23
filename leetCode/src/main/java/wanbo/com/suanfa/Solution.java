@@ -1,6 +1,7 @@
 package wanbo.com.suanfa;
 
 import lombok.Data;
+import org.checkerframework.checker.units.qual.C;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -1735,7 +1736,6 @@ public class Solution {
                 strings.add(buffer.toString());
                 continue;
             }
-
             // 当前行不止一个单词
             int avgSpaces = spaceNum / (wordsNum - 1);
             int extraSpaces = spaceNum % (wordsNum - 1);
@@ -1768,12 +1768,46 @@ public class Solution {
     }
 
 
-    public static void main(String[] args) {
-        int a = 0;
-        int c = a++;
-        int b = ++a;
+    /**
+     * 125.验证回文串
+     * 如果将多有大写字符转换为小写字符、并移除所有非字母或数字字符后，短语正这读和反着读一样。则可认为该短语是一个回文串
+     * 字母和数字都属于字母数字字符
+     * 给你一个字符串s ,如果它是回文串，则返回true：否则返回false。
+     */
+    public boolean isPalindrome(String s) {
+        char[] chars = s.toCharArray();
+        //双指针 一次遍历
+        int left = 0;
+        int right = s.length() - 1;
+        while (left < right) {
+            //左右任意为数字
+            if (!Character.isLetterOrDigit(chars[left])) {
+                left++;
+            }
+            if (!Character.isLetterOrDigit(chars[right])) {
+                right--;
+            }
+
+            //比较字符串
+            if (Character.isLetterOrDigit(chars[left]) && Character.isLetterOrDigit(chars[right])) {
+                if (Character.toLowerCase(chars[left]) == Character.toLowerCase(chars[right])) {
+                    left++;
+                    right--;
+                } else {
+                    return false;
+                }
+            }
+
+        }
+        return true;
     }
 
 
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        boolean palindrome = solution.isPalindrome(" ");
+
+
+    }
 }
 
