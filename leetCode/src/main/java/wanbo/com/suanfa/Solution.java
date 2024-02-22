@@ -1802,10 +1802,90 @@ public class Solution {
         return true;
     }
 
+    /**
+     * 392.判断子序列
+     * 给定字符串 s 和 t,判断s是否是t的子序列
+     * 字符串的一个子序列是原始字符串删除一些（也可以不删除）字符而不改变剩余字符串相对位置形成的新字符串。（例如，"abc"是"abcde"的一个子序列）
+     * 而"aec"不是
+     * <p>
+     * 进阶：如果有大量的输入S，乘坐S1、S2、、、、Sk 其中k>= 10亿，你需要依次检查他们是否为T的子序列。在这种情况下，你会怎么样改变代码
+     * <p>
+     * 【双指针】【字符串】【动态规划】
+     */
+    public boolean isSubsequence(String s, String t) {
+        //P1 双指针
+        //注意题中的意思 删除一些字符 所以不需要管删除的字符是否包含目标字符 直接向后对比即可
+//        int left = 0;
+//        int right = 0;
+//        while (left < s.length() && right < t.length()) {
+//            if (s.charAt(left) == t.charAt(right)) {
+//                left++;
+//                right++;
+//            } else {
+//                right++;
+//            }
+//        }
+//
+//        if (left == s.length()) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+
+        //考虑动态规划
+        //思路：考虑前面的双指针的做法，我们注意到我们有大量的时间用于在t中找到下一个匹配字符。
+        //这样我们可以预处理对于t的每一个位置，从该位置开始往后每一个字符第一次出现的位置。
+        //我们可以使用动态规划的方法实现预处理，
+        // 令 f[i][j]表示字符串t中，从位置i开始往后 字符j 第一次出现的位置。
+        //再进行状态转移时，
+        // 如果t中的位置i的字符就是j，那么f[i][j] = i ,否则j出现在位置i+1开始往后，即f[i][j] = f[i+1][j] TODO 状态转移的关键
+        //因此我们要倒过来进行动态规划，从后往前枚举i 末尾的状态是确认的
+
+        //状态转移方程
+        //f[i][j] = i (t.[i] = j) : f[i+1][j] (t[i!=j])
+
+        //假定下标从0开始，那么f[i][j]中有 0 <= i <= m-1,
+        //对于临界状态f[m-1][.] 置 f[m][.] = m,(边界&&初始) 让f[m-1][.] 可以正常转移。
+        // 这样如果f[i][j] = m,则表示从位置i开始往后不存在字符j
+        //这样我们可以利用f数组，每次O(1)的跳到下一个位置，直到位置变为m或者s中的每一个字符串都匹配成功
+
+        //初始化f[][]数组
+        int m = t.length();
+        int[][] f = new int[m + 1][26]; //为什么要 +1 难道是状态转移方程 需要向后一位
+
+
+        //f[][] 临界状态填充 在m位置的26个字符 的下一个出现的位置都为在字符串的位置为m m为不合法字符用来表示不存在
+        for (int i = 0; i < 26; i++) {
+            f[m][i] = m;
+        }
+
+
+        //f[][] 根据状态转移方程 填充数值
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = 0; j < 26; j++) {
+                if (t.charAt(i) == j + 'a') {
+                    f[i][j] = i;
+                } else {
+                    f[i][j] = f[i + 1][j];
+                }
+            }
+        }
+
+
+        int add = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (f[add][s.charAt(i) - 'a'] == m) {//任意到达不可能到达的临界值时 返回false
+                return false;
+            }
+            add = f[add][s.charAt(i) - 'a'] + 1;
+        }
+
+        return true;
+    }
+
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
-        boolean palindrome = solution.isPalindrome(" ");
+        System.out.println(1 + 'a');
 
 
     }
