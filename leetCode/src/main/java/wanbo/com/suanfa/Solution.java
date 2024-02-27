@@ -1884,8 +1884,67 @@ public class Solution {
     }
 
 
+    /**
+     * 167. 两数之和 II - 输入有序数组
+     * 给你一个下标从1 开始的整数数组 numbers，该数组已按 非递减顺序排序
+     * 请你从数组中找出满足相加之和等于目标数target的两个数
+     * 你可以假设每次 只对应唯一答案，而且你不可以使用重复使用相同的元素
+     */
+
+    public int[] twoSum(int[] numbers, int target) {
+        int[] ints = new int[2];
+//        //P1双指针暴力破解
+//        //关键点非递减顺序排列 可以减少双指针循环时间
+//        int left = 0;
+//        int right = 1;
+//        while (right < numbers.length) {
+//            //先判断和是否正确
+//            if (numbers[left] + numbers[right] == target) {
+//                break;
+//                //右边界可能已经大于target 次轮遍历结束
+//            } else if (numbers[right] + numbers[left] >= target || right == numbers.length - 1) {
+//                left++;
+//                right = left + 1;
+//
+//            } else {
+//                right++;
+//            }
+//        }
+//        ints[0] = left+1;
+//        ints[1] = right+1;
+//        return ints;
+        //勾八恶心，超时了
+
+        //双指针+利用非递减性质 减少比较次数
+        //初始时，指针在数组两侧，比较两个位置的和，
+        // 如果大于目标值，则右边大，右边左移一位
+        //如果小于目标值则左边偏小，左半右移一位
+        int left = 0;
+        int right = numbers.length - 1;
+
+        while (left < right) {
+            if (numbers[left] + numbers[right] == target) {
+                break;
+            } else if (numbers[left] + numbers[right] >= target) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+        ints[0] = left + 1;
+        ints[1] = right + 1;
+        return ints;
+
+
+        //P3遍历数组 再利用二分找 与当前元素相加和等于目标值的元素
+
+    }
+
+
     public static void main(String[] args) {
-        System.out.println(1 + 'a');
+        int[] ints = {-10, -8, -2, 1, 2, 5, 6};
+        Solution solution = new Solution();
+        solution.twoSum(ints, 0);
 
 
     }
