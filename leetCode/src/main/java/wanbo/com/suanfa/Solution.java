@@ -1971,9 +1971,82 @@ public class Solution {
     }
 
 
+    /**
+     * 15. 三数之和
+     * 给你一个整数数组 nums[] ,判断是否存在三元组
+     * nums[i] + nums[j] + nums[k] = 0
+     * 其中i j k 三个数互不相等
+     * 请返回所有和为 0 且不为零的所有三元组
+     * 注意：答案不可以重复
+     */
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        //只要数值不要下标 首先考虑排序
+        //排序之后 固定一个元素 从最小元素开始
+        //从固定元素下一个 和 末尾元素 两个指针开始向内 移动
+
+        //定义返回的数据类型
+        List<List<Integer>> lists = new ArrayList<>();
+
+        //排序
+        Arrays.sort(nums);
+
+        for (int first = 0; first < nums.length; first++) {
+            //判断是否和上次枚举的值不相同
+            if (first > 0 && nums[first] == nums[first - 1]) {
+                continue;
+            }
+
+            //c对应的指针指向数组的最右端
+            int third = nums.length - 1;
+            int target = -nums[first];//需要的 b + c 对应的和
+            //第二个元素从first左端开始
+            for (int second = first + 1; second < nums.length; second++) {
+
+                //需要和上一次枚举的枚举的值不一样
+                if (second > first + 1 && nums[second] == nums[second - 1]) {
+                    continue;
+                }
+
+                //需要保证b指针在c指针的左侧
+                //当nums[second] + nums[third] < target 时 右侧指针左移
+                while (second < third && nums[second] + nums[third] > target) {
+                    third--;
+                }
+
+
+                //如果指针重合，随着b后续增加
+                //就不会满足 a+b+c = 0 并且 b<c 的c了，可以退出循环
+                if (second == third) {
+                    break;//退出第二层循环
+                }
+
+                //当nums[second] + nums[third] < target 时
+                //进入下一次循环 左侧指针右移
+
+                //当nums[second] + nums[third] = target 时
+                if (nums[second] + nums[third] == target) {
+                    //添加进结果集
+                    ArrayList<Integer> list = new ArrayList<>();
+                    list.add(nums[first]);
+                    list.add(nums[second]);
+                    list.add(nums[third]);
+                    lists.add(list);
+                }
+
+
+            }
+
+        }
+        return lists;
+
+
+    }
+
     public static void main(String[] args) {
-
-
+        int[] ints = {-1, 0, 1, 2, -1, -4};
+        Solution solution = new Solution();
+        List<List<Integer>> lists = solution.threeSum(ints);
     }
 }
 
