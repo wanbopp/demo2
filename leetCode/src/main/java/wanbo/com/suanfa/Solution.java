@@ -2042,11 +2042,95 @@ public class Solution {
 
 
     }
+/********************************************************滑动窗口********************************************************/
+    /**
+     * 209. 长度最小的子数组
+     * 给定一个含有n个正整数数组和一个正整数target
+     * 找出数组中满足其总和大于等于target的长度最小的 连续子数组，
+     * 并返回其长度。如果不存在符合条件的子数组，则返回0
+     */
+    public int minSubArrayLen(int target, int[] nums) {
+
+//        //TODO P1 自己的解法 想当于前缀和+找最短长度 每次满足条件 长度减一进行下次循环
+//        int[] prefixSum = new int[nums.length];
+//        //前缀和
+//        prefixSum[0] = nums[0];
+//        for (int i = 1; i < nums.length; i++) {
+//            prefixSum[i] = prefixSum[i - 1] + nums[i];
+//        }
+//
+//
+//        if (target > prefixSum[nums.length - 1]) {//目标值大于 数组和最大值 不存在直接返回零
+//            return 0;
+//        }
+//        //全是正整数 所以窗口的长度一定小于target
+//        //考虑是否需要排序， 如果排序长度就不好说了 所以一定是没办法排序
+//        int width = Math.min(target, nums.length - 1);//存在target 大于 nums.length的情况
+//        //width做窗口的大小
+//        while (width >= 0) {//窗口逐渐减小
+//            int left = 0;
+//            int right = width;//每次开始滑动时 窗口状态
+//            //固定窗口大小开始滑动 遇到符合条件的这次循环结束 减少窗口大小 继续下一次循环
+//            while (right <= nums.length - 1) {
+//
+//                if (left != right) {
+//                    if (((prefixSum[right] - prefixSum[left] + nums[left]) >= target)) {
+//                        //如果当前窗口的总和已经大于 目标值
+//                        width--;
+//                        break;
+//                    } else {
+//                        left++;
+//                        right++;
+//                    }
+//                } else if (left == right) {
+//                    //此时width已经为0
+//                    if (nums[right] >= target) {
+//                        return 1;
+//                    } else {
+//                        left++;
+//                        right++;
+//                    }
+//                }
+//                //如果到达右边界 直接返回当前 width+1;
+//                if (right == nums.length) {
+//                    return width + 2;
+//                }
+//            }
+//        }
+//
+//        //窗口的最大长度一定小于
+//        return 0;
+
+
+        //TODO 真正的滑动窗口
+        //定义两个指针 start和end 分别表示子数组（滑动窗口的窗口）的开始位置和结束位置
+        //维护变量 sum 存储子数组中的元素和（即从nums[start] 到 nums[end]的元素和）
+        //初试状态下，start和end 都指向下标0，sum值为0
+        //每一次迭代，将nums[end] 加到sum,如果sum >= s，则更新数组的最小长度（此时子数组的最小长度为end- start + 1）
+        //然后将nums[start] 从中减去 并将start右移，直到sums < s,在此过程中更新子数组的最小长度。在每一次迭代的最后，将end右移。
+        int length = nums.length;
+
+        int ans = Integer.MAX_VALUE;//标记是否发生了变化
+        int start = 0;
+        int end = 0;
+        int sum = 0;
+        while (end < length) {
+            sum = sum + nums[end];
+            while (sum>=target){//往前滑动的条件 不满足目标值向前滑动  直到满足条件 左窗口试探减小
+                ans = Math.min(ans, end - sum + 1);
+                sum = sum - nums[start];
+                start ++;
+            }
+            end++;
+        }
+        return ans == Integer.MAX_VALUE ? 0 : ans;//如果一直不满足条件 此时ans仍为最大值不发生不变化
+
+    }
 
     public static void main(String[] args) {
-        int[] ints = {-1, 0, 1, 2, -1, -4};
+        int[] ints = {2, 3, 1, 2, 4, 3};
         Solution solution = new Solution();
-        List<List<Integer>> lists = solution.threeSum(ints);
+        int i = solution.minSubArrayLen(7, ints);
     }
 }
 
