@@ -1,5 +1,7 @@
 package wanbo.com.suanfa;
 
+import com.sun.deploy.util.StringUtils;
+import javafx.scene.chart.Chart;
 import lombok.Data;
 import org.checkerframework.checker.units.qual.C;
 
@@ -2116,10 +2118,10 @@ public class Solution {
         int sum = 0;
         while (end < length) {
             sum = sum + nums[end];
-            while (sum>=target){//往前滑动的条件 不满足目标值向前滑动  直到满足条件 左窗口试探减小
+            while (sum >= target) {//往前滑动的条件 不满足目标值向前滑动  直到满足条件 左窗口试探减小
                 ans = Math.min(ans, end - sum + 1);
                 sum = sum - nums[start];
-                start ++;
+                start++;
             }
             end++;
         }
@@ -2127,10 +2129,60 @@ public class Solution {
 
     }
 
+
+    /**
+     * 3. 最长无重复字串
+     * 给定一个字符串 s ，请你找出其中不含有重复字符的最长字符串长度
+     * 示例 1:
+     * 输入: s = "abcabcbb"
+     * 输出: 3
+     * 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+     * <p>
+     * 示例 2:
+     * 输入: s = "bbbbb"
+     * 输出: 1
+     * 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+     * <p>
+     * 示例 3:
+     * 输入: s = "pwwkew"
+     * 输出: 3
+     * 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     * 请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+     * <p>
+     * 提示：
+     * 0 <= s.length <= 5 * 104
+     * s 由英文字母、数字、符号和空格组成
+     */
+    int lengthOfLongestSubstring(String s) {
+        // 需要维护hash表中每一个字符的位置
+        // 遇到hash表中已经存在的元素，从hash表中取出已经存在的元素，start从这个元素的位置开始，put新的元素的值
+        // 考虑初始状态：都从零开始
+        HashMap<Character, Integer> hashMap = new HashMap<>();
+        //去除空格
+        int ans = 0;// 默认是0
+        int start = 0;
+        int end = 0;
+        int length = s.length();
+        while (end < length && start <= end) {
+            if (hashMap.containsKey(s.charAt(end))) {
+                // hashMap.get(s.charAt(end)) 之前的key都需要remove掉
+                while (hashMap.containsKey(s.charAt(end)) && start <= hashMap.get(s.charAt(end))) {// hashMap.get(s.charAt(end)))当前hashmap中包含的跟end位置相同字符的位置
+                    hashMap.remove(s.charAt(start));
+                    start++;
+                }
+
+            }
+            hashMap.put(s.charAt(end), end);
+            ans = Math.max(ans, hashMap.size());
+            end++;
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         int[] ints = {2, 3, 1, 2, 4, 3};
         Solution solution = new Solution();
-        int i = solution.minSubArrayLen(7, ints);
+        int abcabcbb = solution.lengthOfLongestSubstring("abcabcbb");
     }
 }
 
