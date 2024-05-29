@@ -2158,7 +2158,6 @@ public class Solution {
         // 遇到hash表中已经存在的元素，从hash表中取出已经存在的元素，start从这个元素的位置开始，put新的元素的值
         // 考虑初始状态：都从零开始
         HashMap<Character, Integer> hashMap = new HashMap<>();
-        //去除空格
         int ans = 0;// 默认是0
         int start = 0;
         int end = 0;
@@ -2179,10 +2178,59 @@ public class Solution {
         return ans;
     }
 
+    /**
+     * 36.有效的数独
+     * 请你判断一个 9*9 的数独是否有效，只需要根据一下规则，验证已经填入的数字是否有效即可
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * <p>
+     * 注意：
+     * 一个有效的数独（部分已被填充）不一定是可解的
+     * 只需要根据以上规则，验证已经填入的数字是否有效即可
+     * 空白格用 。表示
+     */
+    public boolean isValidSudoku(char[][] board) {
+        //目的 需要记录每一个行 每一列  每一个3*3 的格子内 不存在相同数字
+        //使用两个二维数组 记录每一行、每一列数字出现的次数
+
+        //使用三维数组 3*3 记录每一个方格内的数值出现的次数
+
+        //如何只遍历一次，关键是 i/3 j/3 正好落在方格里，因此进行一次二重循环 即可拿到所有情况
+
+        //char - '0' - 1 字符转换为 数值
+
+        //初始三个数组
+        int[][] rows = new int[9][9];
+        int[][] colums = new int[9][9];
+        int[][][] subboxes = new int[3][3][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char c = board[i][j];
+                if ('.' != c) {
+                    //行、列 所在位置的元素值+1
+                    int index = c - '0' - 1;
+                    rows[i][index]++;
+                    colums[j][index]++;
+                    //小格子元素++
+                    subboxes[i / 3][j / 3][index]++;// i/3 j/3 自动去整了
+                    //判断加过之后元素值是否大于2
+                    if (rows[i][index] > 1 || colums[j][index] > 1 || subboxes[i / 3][j / 3][index] > 1) {
+                        return false;
+                    }
+                }
+            }
+
+        }
+        return true;
+
+    }
+
     public static void main(String[] args) {
         int[] ints = {2, 3, 1, 2, 4, 3};
         Solution solution = new Solution();
-        int abcabcbb = solution.lengthOfLongestSubstring("abcabcbb");
+
+
     }
 }
 
