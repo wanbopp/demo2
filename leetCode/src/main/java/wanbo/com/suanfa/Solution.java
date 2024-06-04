@@ -2227,9 +2227,60 @@ public class Solution {
 
     }
 
+    /**
+     * 54.螺旋矩阵
+     * 给你你一个 m 行 n 列的矩阵 matrix ，请按照顺时针顺序返回矩阵中所有的元素
+     * <p>
+     * <img src = "img.png">
+     * </p>
+     * 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+     * 输出：[1,2,3,6,9,8,7,4,5]
+     * 核心思想是 模拟
+     */
+
+
+    public List<Integer> spiralOrder(int[][] matrix) {
+        ArrayList<Integer> order = new ArrayList<>();
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+
+        //是否已经访问过
+        boolean[][] visited = new boolean[rows][columns];
+
+        //空数组判断
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return order;
+        }
+
+        int total = rows * columns;//用以遍历
+        int row = 0, column = 0;
+
+        //控制方向
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};//TODO 非常巧妙 四个方向
+        int directionIndex = 0;
+
+        for (int i = 0; i < total; i++) {
+            order.add(matrix[row][column]);//放入数组
+            visited[row][column] = Boolean.TRUE;//增加一访问标记 默认是false
+            //获取当前方向下的另外一个位置是否合法
+            int nextRow = row + directions[directionIndex][0];
+            int nextColumn = column + directions[directionIndex][1];
+            //判断是否合法 超出边界或者已经访问过 转向（即directionIndex下一个）
+            if (nextRow < 0 || nextRow >= rows || nextColumn < 0 || nextColumn >= columns || visited[nextRow][nextColumn]) {
+                directionIndex = (directionIndex + 1) % 4;
+            }
+            row = row + directions[directionIndex][0];
+            column = column + directions[directionIndex][1];
+        }
+        return order;
+
+
+    }
+
     public static void main(String[] args) {
-        int[] ints = {2, 3, 1, 2, 4, 3};
+        int[][] matrix = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         Solution solution = new Solution();
+        solution.spiralOrder(matrix);
 
 
     }
