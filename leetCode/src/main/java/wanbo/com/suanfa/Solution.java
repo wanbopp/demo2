@@ -2277,10 +2277,62 @@ public class Solution {
 
     }
 
+    /**
+     * 48.旋转图像
+     * 给定一个 n*n 的矩阵 matrix 表示一个图像，请你将图像顺时针旋转 90 度
+     * 你必须在原地旋转图像，这就意味着你需要直接修改输入的二维矩阵
+     *
+     * @param matrix
+     */
+    public void rotate(int[][] matrix) {
+        //P1 使用新的矩阵
+        //观察新的结果
+        //对于矩阵中的第 i 行，第 j 个元素，
+        //在旋转后，它出现在倒数第 i 列 第j个元素
+        //转换为行列关系
+        //(i,j)   (j,n-i-1)
+        //新建新的矩阵把原来的矩阵元素遍历进去
+        int length = matrix.length;
+        int high = matrix[0].length;
+        int[][] matrixMirror = new int[length][high];
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < high; j++) {
+                matrixMirror[j][length - i - 1] = matrix[i][j];
+            }
+        }
+//        matrix = matrixMirror;
+
+
+        //P2 不使用额外的空间 在原先的矩阵上进行操作
+        //考虑翻转 对折，先上下反折，再住对角线对折
+
+        //上下替换 只遍历上半部分
+        int temp;
+        for (int i = 0; i < length / 2; i++) {
+            for (int j = 0; j < high; j++) {
+                temp = matrix[i][j];
+                matrix[i][j] = matrix[length - i - 1][j];
+                matrix[length - i - 1][j] = temp;
+            }
+        }
+
+        //主对角线翻折
+        for (int i = 0; i < length; i++) {
+            for (int j = i; j < high ; j++) {
+                temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+
+
+    }
+
     public static void main(String[] args) {
         int[][] matrix = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         Solution solution = new Solution();
-        solution.spiralOrder(matrix);
+        solution.rotate(matrix);
 
 
     }
