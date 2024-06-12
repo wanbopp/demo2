@@ -2319,7 +2319,7 @@ public class Solution {
 
         //主对角线翻折
         for (int i = 0; i < length; i++) {
-            for (int j = i; j < high ; j++) {
+            for (int j = i; j < high; j++) {
                 temp = matrix[i][j];
                 matrix[i][j] = matrix[j][i];
                 matrix[j][i] = temp;
@@ -2329,10 +2329,51 @@ public class Solution {
 
     }
 
+
+    /**
+     * 73.矩阵置零
+     * 给定一个 M * N 的矩阵，如果一个元素为0，则将其所在行列所有元素都设为 0
+     * 请使用 原地 算法
+     *
+     * @param matrix
+     */
+    public void setZeroes(int[][] matrix) {
+        //什么是原地算法
+        //P1 遍历一遍记录需要置零的行和列，第二次遍历对对应行和列置零
+        //使用了 O（n+m）的空间
+        int row = matrix.length;
+        int column = matrix[0].length;
+        //new一个新的数组记录 需要的变化
+        int[] zeroRows = new int[row];
+        int[] zeroColumns = new int[column];
+
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (matrix[i][j] == 0) {
+                    zeroRows[i] = 1;
+                    zeroColumns[j] = 1;
+                }
+            }
+        }
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (zeroRows[i] == 1 || zeroColumns[j] == 1) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        //P2 如何就使用一个常亮实现
+
+
+    }
+
+
     public static void main(String[] args) {
-        int[][] matrix = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        int[][] matrix = new int[][]{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}};
         Solution solution = new Solution();
-        solution.rotate(matrix);
+        solution.setZeroes(matrix);
 
 
     }
