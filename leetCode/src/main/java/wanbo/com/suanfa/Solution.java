@@ -12,6 +12,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -2369,11 +2372,173 @@ public class Solution {
 
     }
 
+    /**
+     * 289.生命游戏
+     * 给定一个 m * n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞，或者 0 即为死细胞。
+     * 每个细胞与其八个相邻位置（水平、垂直、对角线）的细胞都遵循一下四条生存定律
+     * 1、如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡
+     * 2、如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活
+     * 3、如果活细胞周围八个位置超过三个活细胞，则该位置活细胞死亡
+     * 4、如果死细胞周围正好有三个活细胞，则该位置死细胞复活
+     * 下个状态是通过上述规则同时应用于当前状态下的每个细胞所行程的，其中细胞的出生和死亡是同时发生的，
+     *
+     * @param board
+     */
+    public void gameOfLife(int[][] board) {
+        //P1 b
+
+        int row = board.length;
+        int column = board[0].length;
+        int[][] boardCopy = new int[row][column];
+
+        //副本
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                boardCopy[i][j] = board[i][j];
+            }
+        }
+
+//        for (int i = 0; i < row; i++) {
+//            for (int j = 0; j < column; j++) {
+//                int temp = 0;
+//                //左上 存在 中上 中右存在
+//                //temp ++ 返回是自增之前的值
+//                //++ temp
+//                if (0 <= i - 1 && j - 1 >= 0) {
+//                    int i1 = boardCopy[i - 1][j - 1] == 1 ? ++temp : temp;//左上
+//                }
+//                if (i - 1 >= 0) {
+//                    int i2 = boardCopy[i - 1][j] == 1 ? ++temp : temp;//中上
+//
+//                }
+//                if (j - 1 >= 0) {
+//                    int i3 = boardCopy[i][j - 1] == 1 ? ++temp : temp;//中左
+//
+//                }
+//
+//                if (i + 1 < row && j + 1 < column) {
+//                    int i1 = boardCopy[i + 1][j + 1] == 1 ? ++temp : temp;//左下
+//
+//                }
+//                if (j + 1 < column) {
+//
+//                    int i2 = boardCopy[i][j + 1] == 1 ? ++temp : temp;//中右
+//                }
+//
+//                if (i + 1 < row) {
+//                    int i3 = boardCopy[i + 1][j] == 1 ? ++temp : temp;//中下
+//                }
+//
+//                if (i + 1 < row && 0 <= j - 1) {
+//                    int i1 = boardCopy[i + 1][j - 1] == 1 ? ++temp : temp;   //左下
+//                }
+//
+//                if (i - 1 >= 0 && j + 1 < column) {
+//                    int i1 = boardCopy[i - 1][j + 1] == 1 ? ++temp : temp; //右上
+//
+//                }
+//
+//
+//                //逻辑判断
+//                if (boardCopy[i][j] == 1) {
+//                    if (temp < 2 || temp > 3) {
+//                        board[i][j] = 0;
+//                    }
+//                }
+//                if (boardCopy[i][j] == 0 && temp == 3) {
+//                    board[i][j] = 1;
+//                }
+//
+//            }
+//        }
+
+
+        //P2 使用类似于方向数组 获取到周边的八个格子（可能存在无效）数组进行判断
+        //类似于方向数组，这个用来控制周围的子格子位置，判断位置是否合法，在判断活细胞数量
+        //定义方向数组用于查找八个领居
+        int[] directions = {-1, 0, 1};
+
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                int temp = 0;
+
+                //通过方向数组计算邻居 TODO 巧妙
+                for (int x : directions) {
+                    for (int y : directions) {
+                        if (x == 0 && y == 0) {//跳过自身
+                            continue;
+                        }
+                        //判断次数没变 更加整洁
+                        int r = i + x;
+                        int c = j + y;
+                        if (r >= 0 && r < row && c >= 0 && c < column && boardCopy[r][c] == 1) {
+                            temp++;
+                        }
+
+
+                    }
+                }
+                // 逻辑判断
+                if (boardCopy[i][j] == 1) {
+                    if (temp < 2 || temp > 3) {
+                        board[i][j] = 0; // 规则1和规则3
+                    }
+                } else {//细节减少了一次判断
+                    if (temp == 3) {
+                        board[i][j] = 1; // 规则4
+                    }
+                }
+
+            }
+        }
+        //P3 原地算法，通过定义新的状态，既可以知道原先的状态，又可以知道现在的状态。再一次遍历，讲符合状态转换为现在的状态
+    }
+
+    /**
+     * 接收 function  返回一个Predicate 断言
+     */
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();//保存 function 返回的属性值
+        return object -> {//返回 T -> boolean Predicate类型函数
+            Object key = Optional
+                    .ofNullable(object)//将function封装成 Optional
+                    .map(keyExtractor)// 执行function映射 实际是就是实体类的get方法
+                    .orElse(null);//否则返回 null
+            if (key == null) return false;//null 直接返回
+            return seen.putIfAbsent(key, Boolean.TRUE) == null; //不是null put进map
+            // putIfAbsent方法，如果已存在这个key 返回key值，否则返回null
+        };
+
+    }
+
+    static class Dish {//类
+        String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
 
     public static void main(String[] args) {
-        int[][] matrix = new int[][]{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}};
+//        Dish dish1 = new Dish();
+//        dish1.setName("111");
+//        Dish dish2 = new Dish();
+//        dish1.setName("222");
+//        Dish dish3 = new Dish();
+//        dish1.setName("333");
+//
+//        List<Dish> dishes = Arrays.asList(dish1, dish2, dish3);
+//        List<Dish> collect = dishes.stream().filter(distinctByKey(Dish::getName)).collect(Collectors.toList());
+
+        int[][] matrix = new int[][]{{0, 1, 0}, {0, 0, 1}, {1, 1, 1}, {0, 0, 0}};
         Solution solution = new Solution();
-        solution.setZeroes(matrix);
+        solution.gameOfLife(matrix);
 
 
     }
