@@ -2525,22 +2525,73 @@ public class Solution {
         }
     }
 
-    public static void main(String[] args) {
-//        Dish dish1 = new Dish();
-//        dish1.setName("111");
-//        Dish dish2 = new Dish();
-//        dish1.setName("222");
-//        Dish dish3 = new Dish();
-//        dish1.setName("333");
+    /**
+     * 383. 赎金信
+     * 给你两个字符串：ransomNote 和 magazine ，判断 ransomNote 能不能由 magazine 里面的字符构成。
+     * 如果可以，返回 true ；否则返回 false
+     * magazine 中的每个字符只能在 ransomNote 中使用一次。
+     * 标签：哈希表、字符串、计数
+     *
+     * @param ransomNote
+     * @param magazine
+     * @return
+     */
+    public boolean canConstruct(String ransomNote, String magazine) {
+//        //P1 new 一个map 用来存储 magazine 中的字符出现的次数
+//        HashMap<Character, Integer> hashMap = new HashMap<>();
+//        int length = magazine.length();
+//        int lengthed = ransomNote.length();
+//        if (length < lengthed) {
+//            return false;
+//        }
+//        for (int i = 0; i < length; i++) {
+//            char c = magazine.charAt(i);
+//            hashMap.put(c, hashMap.getOrDefault(c, 0) + 1);
+//        }
 //
-//        List<Dish> dishes = Arrays.asList(dish1, dish2, dish3);
-//        List<Dish> collect = dishes.stream().filter(distinctByKey(Dish::getName)).collect(Collectors.toList());
+//        for (int i = 0; i < lengthed; i++) {
+//            char c = ransomNote.charAt(i);
+//            Integer num = hashMap.get(c);
+//            if (num == null || num <= 0) {
+//                return false;
+//            }
+//            hashMap.put(c, num - 1);
+//        }
+//        return true;
 
-        int[][] matrix = new int[][]{{0, 1, 0}, {0, 0, 1}, {1, 1, 1}, {0, 0, 0}};
-        Solution solution = new Solution();
-        solution.gameOfLife(matrix);
-
+        //P2 使用数组保存次数，减少变量
+        int[] chars = new int[26];
+        if (ransomNote.length() > magazine.length()) {
+            return false;
+        }
+        for (char c : magazine.toCharArray()) {
+            chars[c - 'a']++;
+        }
+        for (char c : ransomNote.toCharArray()) {
+            chars[c - 'a']--;
+            if (chars[c - 'a'] < 0) {
+                return false;
+            }
+        }
+        return true;
 
     }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        boolean b = solution.canConstruct("aa", "aab");
+    }
 }
+//    public static void main(String[] args) {
+////        Dish dish1 = new Dish();
+////        dish1.setName("111");
+////        Dish dish2 = new Dish();
+////        dish1.setName("222");
+////        Dish dish3 = new Dish();
+////        dish1.setName("333");
+////
+////        List<Dish> dishes = Arrays.asList(dish1, dish2, dish3);
+////        List<Dish> collect = dishes.stream().filter(distinctByKey(Dish::getName)).collect(Collectors.toList());
+//    }
+//}
 
