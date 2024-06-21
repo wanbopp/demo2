@@ -2604,11 +2604,46 @@ public class Solution {
         return true;
     }
 
+    /**
+     * 290.单词规律
+     * 给定一种规律 pattern 和一个字符串 s ，判断 s 是否遵循相同的规律。
+     * 这里的 遵循 指完全匹配，
+     * 例如， pattern 里的每个字母和字符串 s 中的每个非空单词之间存在着双向连接的对应规律
+     *
+     * @param pattern
+     * @param s
+     * @return
+     */
+    public boolean wordPattern(String pattern, String s) {
+        //与同构字符串类似
+        HashMap<Character, String> p2s = new HashMap<>();
+        HashMap<String, Character> s2p = new HashMap<>();
+        int length = pattern.length();
+        String[] sArr = s.split(" ");
+        //s.length = s.split[' '] 数量 是否相等
+        if (length != sArr.length) {
+            return false;
+        }
+        //开始遍历 并且保存映射关系
+        for (int i = 0; i < length; i++) {
+            char c = pattern.charAt(i);
+            String str = sArr[i];
+
+            //找到所有不符合的情况
+            if ((p2s.containsKey(c) && !p2s.get(c).equals(str)) || (s2p.containsKey(str) && !s2p.get(str).equals(c))) {
+                return false;
+            }
+            //使用了覆盖减少判断
+            p2s.put(c, str);
+            s2p.put(str, c);
+        }
+        return true;
+    }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        boolean b = solution.isIsomorphic("egg", "add");
+        boolean b = solution.wordPattern("abba", "dog cat cat dog");
     }
 }
 //    public static void main(String[] args) {
