@@ -2640,10 +2640,96 @@ public class Solution {
         return true;
     }
 
+    /**
+     * 242.有效的字母异位词
+     * 给定两个字符串 s 和 t
+     * 编写一个函数来判断 t 是否是 s 的字母异位词。
+     * 注意：若 s 和 t 中每个字符串出现的次数都相同，则称 s 和 t 互为字母异位词
+     *
+     * @param s
+     * @param t
+     * @return
+     */
+    public boolean isAnagram(String s, String t) {
+        //便签 排序 字符串
+//        //P1 直接排序 然后遍历 相同位置不相等则return false
+//        char[] sCharArray = s.toCharArray();
+//        char[] tCharArray = t.toCharArray();
+//        //判断长度
+//        if (sCharArray.length != tCharArray.length) {
+//            return false;
+//        }
+//        int length = sCharArray.length;
+//        //如何排序
+//        for (int i = 0; i < length; i++) {
+//            for (int j = 0; j < length - 1 - i; j++) {//减少循环次数
+//                //sCharArray 和 tCharArray 同时冒泡
+//                if (sCharArray[j] < sCharArray[j + 1]) {
+//                    char temp = 0;
+//                    temp = sCharArray[j];
+//                    sCharArray[j] = sCharArray[j + 1];
+//                    sCharArray[j + 1] = temp;
+//                }
+//                if (tCharArray[j] < tCharArray[j + 1]) {
+//                    char temp = 0;
+//                    temp = tCharArray[j];
+//                    tCharArray[j] = tCharArray[j + 1];
+//                    tCharArray[j + 1] = temp;
+//                }
+//
+//            }
+//        }
+//        //再次循环判断是否字母异位
+//        for (int i = 0; i < length; i++) {
+//            if (sCharArray[i] != tCharArray[i]) {
+//                return false;
+//            }
+//        }
+//        return true;
+        //艹艹艹  超时了
+
+
+        //P1 考虑使用map结构保存数量和个数
+        //判断长度
+        if (s.length() != t.length()) {
+            return false;
+        }
+        HashMap<Character, Integer> sMap = new HashMap<>();
+        HashMap<Character, Integer> tMap = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+//            if (sMap.containsKey(s.charAt(i))) {
+//                sMap.put(s.charAt(i), sMap.get(s.charAt(i)) + 1);
+//            } else {
+//                sMap.put(s.charAt(i), 1);
+//            }
+//            if (tMap.containsKey(t.charAt(i))) {
+//                tMap.put(t.charAt(i), tMap.get(t.charAt(i)) + 1);
+//            } else {
+//                tMap.put(t.charAt(i), 1);
+//            }
+            //使用getOrDefault() 减少contain判断
+            tMap.put(t.charAt(i), tMap.getOrDefault(t.charAt(i), 0) + 1);
+            sMap.put(s.charAt(i), sMap.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        //比较值
+        if (sMap.size() != tMap.size()) {
+            return false;
+        }
+        for (Character c : sMap.keySet()) {
+            if (!tMap.containsKey(c) || !Objects.equals(tMap.get(c), sMap.get(c))) {
+                return false;
+            }
+        }
+        return true;
+
+
+        //P3 如果只考虑26个字母可以使用 int[] 数组表示次数
+        //P4 p2可以优化，只使用一个Map 第一次遍历开始减少
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        boolean b = solution.wordPattern("abba", "dog cat cat dog");
+        boolean b = solution.isAnagram("anagram", "nagaram");
     }
 }
 //    public static void main(String[] args) {
