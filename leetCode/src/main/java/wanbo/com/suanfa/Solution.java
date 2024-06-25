@@ -2727,6 +2727,54 @@ public class Solution {
         //P4 p2可以优化，只使用一个Map 第一次遍历开始减少
     }
 
+    /**
+     * 49.字母异位词分组
+     * 给你一个字符串数组，请你将字母异位词结合在一起。
+     * 可以按任意顺序返回结果列表
+     * 字母异位词：是由重新排列源单词的所有字母得到一个新的单词
+     * 示例 1:
+     * 输入: strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
+     * 输出: [["bat"],["nat","tan"],["ate","eat","tea"]]
+     * <p>
+     * 示例 2:
+     * 输入: strs = [""]
+     * 输出: [[""]]
+     * <p>
+     * 示例 3:
+     * 输入: strs = ["a"]
+     * 输出: [["a"]]
+     *
+     * @param strs
+     * @return
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        //hash表 排序
+        //关键点是 异位词排序之后是相等的因此可以做map的key value是一个list
+
+        //遍历字符数组
+        int length = strs.length;
+        if (length == 0) {
+            return new ArrayList<List<String>>();
+        }
+        HashMap<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            //排序
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            String string = new String(chars);
+
+
+            List<String> strings = map.getOrDefault(string, new ArrayList<String>());
+            strings.add(str);
+            map.put(string, strings);
+
+
+        }
+        return new ArrayList<List<String>>(map.values());
+
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         boolean b = solution.isAnagram("anagram", "nagaram");
