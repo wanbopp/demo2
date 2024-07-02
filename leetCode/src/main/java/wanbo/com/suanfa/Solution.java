@@ -2815,9 +2815,72 @@ public class Solution {
         return null;
     }
 
+    /**
+     * 202.快乐数
+     * 编写一个算法来判断一个数 N 是不是快乐数
+     * 对于一个正整数，每一次将该数替换它每一个位置上的数字的平方和
+     * 然后重复这个过程直到这个数变为1，也可能是 无限循环 但始终变不到 1
+     * 如果这个过程结果为 1 ，那么这个数就是快乐数
+     * 如果 n 是快乐数，就返回为true，否则返回false
+     *
+     * @param n
+     * @return
+     */
+
+    public boolean isHappy(int n) {
+//        //TODO P1 循环+hash表判断
+//        //终止条件 这一次等于上一次的结果
+//        //还是需要遍历字符串 还是位运算取每个位置的数值
+//        String str = String.valueOf(n);
+//        HashSet<String> strings = new HashSet<>();
+//        strings.add(str);
+//        //开始计算
+//        while (true) {
+//            //从hash表中获取元素
+//            char[] chars = str.toCharArray();
+//            int nums = 0;
+//            String temp;
+//            for (char aChar : chars) {
+//                nums = nums + ((aChar - '0') * (aChar - '0'));
+//            }
+//            if (nums == 1) {
+//                return true;
+//            }
+//            temp = String.valueOf(nums);
+//            if (temp.equals(str) || strings.contains(temp)) {
+//                return false;//陷入循环
+//            }
+//            str = temp;
+//            strings.add(str);
+//        }
+//
+        //TODO 快慢指针法
+        //通过getNext方法 获取一个隐式的链表
+        //设置两个快慢指针，一个走两部 一个走一步 如果存在循环 那么他们早晚就会相遇
+        int slowRunner = n;
+        int fastRunner = getNext(n);
+        while (fastRunner != 1 && slowRunner != fastRunner) {
+            slowRunner = getNext(slowRunner);
+            fastRunner = getNext(getNext(fastRunner));
+        }
+        return fastRunner == 1;
+
+    }
+
+    public int getNext(int n) {
+        int totalSum = 0;
+        while (n > 0) {
+            int d = n % 10;
+            n = n / 10;
+            totalSum += d * d;
+        }
+        return totalSum;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] b = solution.twoSum2(new int[]{2, 7, 11, 15}, 9);
+        boolean happy = solution.isHappy(19);
     }
 }
 //    public static void main(String[] args) {
