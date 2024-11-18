@@ -2878,21 +2878,56 @@ public class Solution {
     }
 
 
+    /**
+     * 219. 存在重复元素 II
+     * 给你一个整数数组 nums 和一个整数 K ，判断数组中是否存在两个不相同的索引 i 和 j
+     * 满足nums[i] == nums[j] 且 abs(i-j) <= k,（绝对值）
+     * 如果存在返回true；否则返回false。
+     * 【数组】【哈希表】【滑动窗口】
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        //P1 hash表
+        if (k <= 0) {
+            return Boolean.FALSE;
+        }
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i])) {
+                Integer last = map.get(nums[i]);
+                if (i - last <= k) {//判断相邻元素的差值是否小于k
+                    return Boolean.TRUE;
+                }
+                map.remove(nums[i]);
+            }
+            map.put(nums[i], i);
+        }
+        return Boolean.FALSE;
+        //p2 判断最大的窗口内有没有相等元素、依次向后滑动
+
+    }
+
+
+
+
+
+
+
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        boolean happy = solution.isHappy(19);
+        int[] ints = new int[]{1,2,3,1,2,3};
+        boolean b = solution.containsNearbyDuplicate(ints, 2);
+
+
+        String s = String.valueOf(BigDecimal.ZERO);
+        System.out.println("s = " + s);
     }
 }
-//    public static void main(String[] args) {
-////        Dish dish1 = new Dish();
-////        dish1.setName("111");
-////        Dish dish2 = new Dish();
-////        dish1.setName("222");
-////        Dish dish3 = new Dish();
-////        dish1.setName("333");
-////
-////        List<Dish> dishes = Arrays.asList(dish1, dish2, dish3);
-////        List<Dish> collect = dishes.stream().filter(distinctByKey(Dish::getName)).collect(Collectors.toList());
-//    }
-//}
+
 
