@@ -2890,43 +2890,138 @@ public class Solution {
      * @return
      */
     public boolean containsNearbyDuplicate(int[] nums, int k) {
-        //P1 hash表
-        if (k <= 0) {
-            return Boolean.FALSE;
-        }
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(nums[i])) {
-                Integer last = map.get(nums[i]);
-                if (i - last <= k) {//判断相邻元素的差值是否小于k
-                    return Boolean.TRUE;
-                }
-                map.remove(nums[i]);
-            }
-            map.put(nums[i], i);
-        }
-        return Boolean.FALSE;
+//        //P1 hash表
+//        //使用hash表记录上一个键的位置
+//        //遍历 集合判断相同键的距离
+//        if (k <= 0) {
+//            return Boolean.FALSE;
+//        }
+//        HashMap<Integer, Integer> map = new HashMap<>();
+//        for (int i = 0; i < nums.length; i++) {
+//            if (map.containsKey(nums[i])) {
+//                Integer last = map.get(nums[i]);
+//                if (i - last <= k) {//判断相邻元素的差值是否小于k
+//                    return Boolean.TRUE;
+//                }
+//                map.remove(nums[i]);
+//            }
+//            map.put(nums[i], i);
+//        }
+//        return Boolean.FALSE;
         //p2 判断最大的窗口内有没有相等元素、依次向后滑动
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            //如果i大于k 就移除窗口的第一个元素
+            if (i > k) {
+                set.remove(nums[i - k - 1]);//窗口在这里体现
+            }
+            //其他情况都添加元素 判断添加的元素是否已经存在
+            if (!set.add(nums[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 128.最长连续序列
+     * 给定一个未排序的整数数组 nums,找出数字连续的最长序列(不要求序列元素在数组中连续)的长度
+     * 请你设计并实现时间复杂度为 O(n) 的算法解决此问题
+     * 【查并集】【数组】【哈希表】
+     */
+
+    public int longestConsecutive(int[] nums) {
+        //如果排序再循环时间复杂度>O(n)
+//        if (nums.length == 0) {
+//            return 0;
+//        }
+//        //冒泡排序
+//        boolean flag = true;
+//        for (int i = 0; i < nums.length - 1; i++) {
+//            for (int j = 0; j < nums.length - 1 - i; j++) {//冒泡排序的优化点 减少二次循环的次数 注意是从前面减少还是后面减少
+//                if (nums[j] > nums[j + 1]) {
+//                    int temp = nums[j];
+//                    nums[j] = nums[j + 1];
+//                    nums[j + 1] = temp;
+//                    flag = false;
+//                }
+//            }
+//            if (flag) {//冒泡排序的优化点 提前排序完成结束循环
+//                break;
+//            }
+//        }
+//        //记录区间长度最大值
+//        int max = 0;
+//        //计数器
+//        int num = 0;
+//        //再次遍历一次最大连续区间
+//        for (int i = 1; i <= nums.length - 1; i++) {
+//
+//            //判断上个值跟当前值是否连续
+//            if (nums[i] - nums[i - 1] == 1) {
+//                //计数器++
+//                num++;
+//                //最大值更新
+//                max = Math.max(num, max);
+//            } else if (nums[i] == nums[i - 1]) {//如果相等不计数 继续向后
+//                continue;
+//            } else {
+//                //计数器重置
+//                num = 0;
+//            }
+//        }
+//        return max + 1;
+
+
+        //p2 如何控制在 O(n) 一次循环
+        //对于每一个数 在数组中枚举他后面的值 如果有枚举他的
+        //需要一个hash表去 去重维护表中元素 随机访问
+        //遍历hash表 判断是否有前置元素 如果有continue 没有开始在hash表中找后置元素 更新最大长度 直到没有
+        //如果存在前置元素没必须要进行二次循环找后置元素
+        //1、遍历元素添加到hash表中
+        //2、遍历这个hash表
+        //3、如果存在前置元素 跳过
+        //4、没有前置元素、以当前元素为起点向后找后置元素
+        if (nums.length == 0){
+            return 0;
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+
+
+        int longestStreak = 1;
+        for (int num : set) {
+            if (!set.contains(num - 1)) {
+                //向后找后置元素
+                //记录当前元素的大小
+                int currentNum = num;
+                for (int j = 1; j < nums.length; j++) {
+                    if (set.contains(currentNum + 1)) {
+                        currentNum++;
+                        longestStreak = Math.max(longestStreak, j+1);
+                    } else {
+                        break;
+                    }
+
+                }
+
+            }
+
+
+        }
+        return longestStreak;
+
 
     }
 
 
-
-
-
-
-
-
-
-
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] ints = new int[]{1,2,3,1,2,3};
-        boolean b = solution.containsNearbyDuplicate(ints, 2);
-
-
-        String s = String.valueOf(BigDecimal.ZERO);
-        System.out.println("s = " + s);
+        int[] ints = new int[]{0};
+        int i = solution.longestConsecutive(ints);
     }
 }
 
