@@ -2983,7 +2983,7 @@ public class Solution {
         //2、遍历这个hash表
         //3、如果存在前置元素 跳过
         //4、没有前置元素、以当前元素为起点向后找后置元素
-        if (nums.length == 0){
+        if (nums.length == 0) {
             return 0;
         }
         Set<Integer> set = new HashSet<>();
@@ -3001,7 +3001,7 @@ public class Solution {
                 for (int j = 1; j < nums.length; j++) {
                     if (set.contains(currentNum + 1)) {
                         currentNum++;
-                        longestStreak = Math.max(longestStreak, j+1);
+                        longestStreak = Math.max(longestStreak, j + 1);
                     } else {
                         break;
                     }
@@ -3014,14 +3014,51 @@ public class Solution {
         }
         return longestStreak;
 
+    }
+
+//    区间
+
+    /**
+     * 228. 汇总区间
+     * 给定一个 无重复元素的有序整数数组 nums.
+     * 返回恰好覆盖数组中的所有的数字的最小有序区间范围列表。
+     * 也就是说，nums 的每个元素都恰好被某个区间覆盖，并且不存在属于某个范围，但不属于 nums 的数字x
+     * 列表中的每个区间范围 [a,b],应该按照如下格式输出：
+     * "a->b" ，如果 a != b
+     * "a" ，如果 a == b
+     */
+    public List<String> summaryRanges(int[] nums) {
+        List<String> strings = new ArrayList<>();
+        for (int i = 0; i <= nums.length - 1; i++) {
+            //下一个元素是否连续
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(nums[i]);
+            while (i < nums.length - 1) {
+                if (nums[i + 1] - nums[i] != 1) {
+                    break;
+                }
+                i++;
+            }
+            //判断上一个元素是否相等
+            if (!Objects.equals(stringBuilder.substring(0), String.valueOf(nums[i]))) {
+                stringBuilder.append("->");
+                stringBuilder.append(nums[i]);
+            }
+
+            strings.add(stringBuilder.toString());
+
+        }
+
+        return strings;
+
 
     }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] ints = new int[]{0};
-        int i = solution.longestConsecutive(ints);
+        int[] ints = new int[]{0, 1, 2, 4, 5, 7};
+        solution.summaryRanges(ints);
     }
 }
 
