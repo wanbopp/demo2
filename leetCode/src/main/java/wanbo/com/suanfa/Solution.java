@@ -1,21 +1,12 @@
 package wanbo.com.suanfa;
 
-import com.sun.deploy.util.StringUtils;
-import javafx.scene.chart.Chart;
-import lombok.Data;
-import org.checkerframework.checker.units.qual.C;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
+import lombok.Data;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * @version 1.0
@@ -3054,11 +3045,78 @@ public class Solution {
 
     }
 
+    /**
+     * 70.爬楼梯
+     * 爬第N阶楼梯的方法的数量 = (n-1阶方法的数量) + (n-2阶方法的数量)
+     * 爬第0阶台阶和爬第1阶台阶的数量为都为1 初态有了
+     * 1、爬上第 n-1 阶楼梯的方法数量。因为再爬1阶楼梯就能到第n阶
+     * 2、爬上第 n-2 阶楼梯的方法数量。因为再爬两节楼梯就能到达第n阶
+     * 【动态规划】【子问题拆分】【边界】
+     * 【确定转移方程 临界条件】
+     */
+    public int climbStairs(int n) {
+        int[] dp = new int[n + 1];
+        // 保存低n阶楼梯 数量之和
+        dp[0] = 1;
+        dp[1] = 1;
+
+        // 递归到 n
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+
+    /**
+     * 20.有效的括号
+     * 给定一个只包括'('、')'、'['、']'、'{'、'}'
+     * 的字符串s, 判断字符串是否有效。
+     * 有效字符串满足：
+     * 1、左括号，必须用相同的右扩招闭合
+     * 2、左括号必须以正确的顺序闭合
+     * 3、每个右括号都要有一个对应相同类型的左括号
+     * 【栈】
+     */
+    public boolean isValid(String s) {
+        //出栈和入栈
+        int length = s.length();
+        //不为2的倍数 指定不满足
+        if (length % 2 == 1) {
+            return false;
+        }
+
+        //使用hash表记录每一种括号的对应关系 注意是反这来的 通过右括号匹配左括号
+        Map<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put(']', '[');
+        map.put('}', '{');
+
+        //使用栈结构存储
+        Deque<Character> stack = new LinkedList<>();
+
+        //遍历原始字符串
+        for (int i = 0; i < length; i++) {
+            char charAt = s.charAt(i);
+            //判断是否是左边括号的集合 ，右边括号直接push到栈顶
+            if (map.containsKey(charAt)) {
+                Character c = map.get(charAt);
+                //当前栈顶元素必须跟便利到的当前元素匹配
+                if (stack.isEmpty() || stack.peek() != c) {//栈中元素提前结束
+                    return false;
+                } else {
+                    stack.pop();//匹配上了 弹出
+                }
+            } else {//右边括号直接入栈
+                stack.push(charAt);
+            }
+        }
+        return stack.isEmpty();//还有未出栈元素
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] ints = new int[]{0, 1, 2, 4, 5, 7};
-        solution.summaryRanges(ints);
+        boolean valid = solution.isValid("()[]{}");
     }
 }
 
