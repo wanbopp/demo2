@@ -2917,8 +2917,8 @@ public class Solution {
 
     /**
      * 128.最长连续序列
-     * 给定一个未排序的整数数组 nums,找出数字连续的最长序列(不要求序列元素在数组中连续)的长度
-     * 请你设计并实现时间复杂度为 O(n) 的算法解决此问题
+     * 求序列元素在数组中连续)的长度
+     * 请你设计并实现时间复杂度为 O(n) 的算法解决此问题 给定一个未排序的整数数组 nums,找出数字连续的最长序列(不要
      * 【查并集】【数组】【哈希表】
      */
 
@@ -3113,6 +3113,60 @@ public class Solution {
         return stack.isEmpty();//还有未出栈元素
     }
 
+    class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+            next = null;
+        }
+    }
+
+
+    /**
+     * 141.环形链表
+     * 给你一个链表的头节点 head 判断链表中是否有环
+     * 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达则链表中存在环
+     * 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾链接到链表中的位置（索引从0开始）
+     * 注意 pos 不作为参与进行传递。仅仅是为了标识链表的实际情况实际情况
+     * 如果存在环 则返回true否则 返回false
+     */
+//    public boolean hasCycle(ListNode head) {
+//        //P1 将节点存入SET 便利 如果重复即是环
+//        if (head == null) {
+//            return false;
+//        }
+//        Set<ListNode> nodes = new HashSet<>();
+//        while (head.next != null) {
+//            head = head.next;
+//            if (nodes.contains(head)) {
+//                return true;
+//            }
+//            nodes.add(head);
+//        }
+//        return false;
+//    }
+    public boolean hasCycle(ListNode head) {
+        //P2 使用双指针 一个走的快一个走的慢 当快的在慢的前面的时候就一定是环
+        if (head == null || head.next == null) {
+            return false;
+        }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (slow != fast) {//快指针转一圈与慢指针重合
+            //不是环的话 快指针有终点
+            if (fast == null || fast.next == null) {
+                return false;
+            }
+            //一快  一慢
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return true;//slow 与 fast 重合 返回true 成环
+
+
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
