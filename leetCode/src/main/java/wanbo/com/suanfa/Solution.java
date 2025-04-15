@@ -2159,7 +2159,9 @@ public class Solution {
         while (end < length && start <= end) {
             if (hashMap.containsKey(s.charAt(end))) {
                 // hashMap.get(s.charAt(end)) 之前的key都需要remove掉
-                while (hashMap.containsKey(s.charAt(end)) && start <= hashMap.get(s.charAt(end))) {// hashMap.get(s.charAt(end)))当前hashmap中包含的跟end位置相同字符的位置
+                while (hashMap.containsKey(s.charAt(end)) && start <= hashMap.get(s.charAt(end))) {
+                    // hashMap.get(s.charAt(end)))
+                    // 当前hashmap中包含的跟end位置相同字符的位置
                     hashMap.remove(s.charAt(start));
                     start++;
                 }
@@ -3169,9 +3171,102 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
-        boolean valid = solution.isValid("()[]{}");
+    new Thread().
     }
+
+    /**
+     * 56.合并区间
+     * 以数组 intervals 表示若干区间集合，其中单个区间为 intervals[i] = [star i,end i]
+     * 请你合并所有重叠的区间，并返回一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间
+     * nums
+     * 【数组】【排序】
+     *
+     * @param intervals
+     * @return
+     */
+    public int[][] merge(int[][] intervals) {
+        //这个区间有序嘛
+        //根据起点排序
+        //遍历每个 intervals[i] 都能确定起点和终点
+        //直到不连续 或者 不包含 保存起点和终点到为数组元素
+
+        //首先根据左端点对数组进行排序
+        int length = intervals.length;
+        //根据左端点进行快排
+        quickSort(intervals, 0, intervals.length - 1);
+
+        //开始遍历数组
+
+
+        return intervals;
+    }
+
+
+    public static void quickSort(int[][] intervals, int left, int right) {
+        if (left < right) {
+            int pivotIndex = partition(intervals, left, right);
+            quickSort(intervals, left, pivotIndex - 1);
+            quickSort(intervals, pivotIndex + 1, right);
+        }
+    }
+
+    private static int partition(int[][] intervals, int left, int right) {
+        int[] pivot = intervals[right]; // 选取最右侧元素作为基准
+        int i = left;
+
+        for (int j = left; j < right; j++) {
+            if (intervals[j][0] < pivot[0]) { // 比较左端点
+                swap(intervals, i, j);
+                i++;
+            }
+        }
+        swap(intervals, i, right);
+        return i; // 返回基准点位置
+    }
+
+    private static void swap(int[][] arr, int i, int j) {
+        int[] temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    /**
+     * Definition for singly-linked list.
+     */
+    class Node {
+        int val;
+        Node next;
+
+        Node() {
+        }
+
+        Node(int val) {
+            this.val = val;
+        }
+
+        Node(int val, Node next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+
+    /**
+     * 2.两数相加
+     *
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public Node addTwoNumbers(Node l1, Node l2) {
+
+
+    }
+
+
+
+
+
+
 }
 
 
